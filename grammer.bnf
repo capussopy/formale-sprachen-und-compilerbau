@@ -1,0 +1,32 @@
+//Program
+<Start>::= <ExpressionList>
+<ExpressionList>::= <Expression> | <Expression> <EndOfExpression> <ExpressionList>
+<Expression>::= <DefineVariable> | <IfCondition> | <IfElseCondition> | <FunctionDefinition> | <FunctionCall> | <LoopExpression> | <ArithmeticExpression>
+
+//Global Definition
+Number::= '[0-9]+'
+VariableName::= '[A-Za-z]+'
+<EndOfExpression>::=  '\n' | '.'
+<VariableList>::= VariableName | VariableName','<VariableList>
+
+//Compare Operations
+<CompareOperator>::= lower than | equal than | greater than | lower or equal than | greater or equal than
+CompareExpression::= <Number> <CompareOperator> <Number>
+
+//Define a variable
+<DefineVariable>::= set <Number> as <VariableName>
+
+//Arithmetic Operation
+<ArithmeticOperator>  ::= add to | substract from| multiply with | divide through
+<ArithmeticExpression> ::= <Number> <ArithmeticOperator> <Number>
+
+//Conditionals
+<IfCondition>::=in case that CompareExpression (<ExpressionList>)
+<IfElseCondition>::= <IfCondition> fallback (<ExpressionList>)
+
+//Functions
+<FunctionDefinition>::=	task VariableName takes <VariableList> (<ExpressionList>)
+<FunctionCall>::= execute VariableName with <VariableList>
+
+// Loops
+<LoopExpression>::= as long as CompareExpression (<ExpressionList>)
