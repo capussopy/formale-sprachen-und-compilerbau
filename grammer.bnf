@@ -10,7 +10,7 @@ VariableName::= '[A-Za-z]+'
 <VariableList>::= VariableName | VariableName','<VariableList>
 
 //Compare Operations
-<CompareOperator>::= lower than | equal than | greater than | lower or equal than | greater or equal than
+<CompareOperator>::= lower than | equal than | greater than | lower or equal than | greater or equal than | not equal than
 CompareExpression::= <Number> <CompareOperator> <Number>
 
 //Define a variable

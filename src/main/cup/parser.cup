@@ -1,0 +1,10 @@
+
+import java_cup.runtime.*
+
+class Parser;
+
+
+terminal PLUS, MINUS, TIMES, DIV;
+
+
+precedence left PLUS, MINUS;
