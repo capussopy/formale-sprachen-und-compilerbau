@@ -87,8 +87,8 @@ StringCharacter = [^\r\n\"\\]
 
 
   /* numeric literals */
-  {Number}                { return symbol(FLOATING_POINT_LITERAL, new Double(yytext())); }
-  {Number}[dD]            { return symbol(FLOATING_POINT_LITERAL, new Double(yytext().substring(0,yylength()-1))); }
+  {Number}                { return symbol(NUMBER, new Double(yytext())); }
+  {Number}[dD]            { return symbol(NUMBER, new Double(yytext().substring(0,yylength()-1))); }
   
 
 
@@ -123,4 +123,3 @@ StringCharacter = [^\r\n\"\\]
 
 /* error fallback */
 [^]                              { throw new RuntimeException("Illegal character \""+yytext()+ "\" at line "+yyline+", column "+yycolumn); }
-<<EOF>>                          { return symbol(EOF); }

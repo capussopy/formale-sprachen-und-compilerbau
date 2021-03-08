@@ -1,0 +1,33 @@
+import java_cup.runtime.*;
+
+terminal java.lang.Double NUMBER;
+
+
+non terminal Program;
+non terminal ArithmeticOperator, ArithmeticExpression;
+
+
+terminal PLUS, MINUS, MULT, DIV;
+
+terminal SET, AS, IF, ELSE, WHILE, FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
+
+terminal EQ, EQEQ, LT, GT, LTEQ, GTEQ, NOTEQ;
+
+
+
+terminal LPAREN, RPAREN, DOT;
+
+
+start with Program;
+Program ::= ArithmeticOperator;
+
+
+
+ArithmeticOperator::= PLUS | MINUS | MULT | DIV;
+ArithmeticExpression::= NUMBER ArithmeticOperator NUMBER;
+
+
+
+
+
+

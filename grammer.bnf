@@ -1,5 +1,5 @@
 //Program
-<Start>::= <ExpressionList>
+<Program>::= <ExpressionList>
 <ExpressionList>::= <Expression> | <Expression> <EndOfExpression> <ExpressionList>
 <Expression>::= <DefineVariable> | <IfCondition> | <IfElseCondition> | <FunctionDefinition> | <FunctionCall> | <LoopExpression> | <ArithmeticExpression>
 

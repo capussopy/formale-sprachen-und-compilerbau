@@ -8,9 +8,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class SimpleTest {
-
-        private ByteArrayOutputStream outputStream;
+public class ParserTest {
 
 
 
