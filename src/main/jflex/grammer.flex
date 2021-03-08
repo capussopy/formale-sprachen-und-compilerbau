@@ -42,7 +42,6 @@ Number = [0-9]+ \. [0-9]*
 
 /* string and character literals */
 StringCharacter = [^\r\n\"\\]
-SingleCharacter = [^\r\n\'\\]
 
 %state STRING
 
@@ -50,40 +49,39 @@ SingleCharacter = [^\r\n\'\\]
 
 <YYINITIAL> {
 
-  /* separators */
-  "("                            { return symbol(LPAREN); }
-  ")"                            { return symbol(RPAREN); }
-  "{"                            { return symbol(LBRACE); }
-  "}"                            { return symbol(RBRACE); }
-  "["                            { return symbol(LBRACK); }
-  "]"                            { return symbol(RBRACK); }
-  ";"                            { return symbol(SEMICOLON); }
-  ","                            { return symbol(COMMA); }
-  "."                            { return symbol(DOT); }
-  
+  /* keywords */
+  "set"                         {return symbol(SET);}
+  "as"                          {return symbol(AS);}
+  "in case that"                {return symbol(IF);}
+  "fallback"                    {return symbol(ELSE);}
+  "as long as"                  {return symbol(WHILE);}
+  "task"                        {return symbol(FUNCTION);}
+  "takes"                       {return symbol(PARAMS);}
+  "execute"                     {return symbol(FUNCTION_CALL);}
+  "with"                        {return symbol(FUNCTION_PARAMS);}
+
   /* operators */
   "="                            { return symbol(EQ); }
-  "greater than"                 { return symbol(GT); }
-  "lower than"                   { return symbol(LT); }
   "equal than"                   { return symbol(EQEQ); }
+  "lower than"                   { return symbol(LT); }
+  "greater than"                 { return symbol(GT); }
   "lower or equal than"          { return symbol(LTEQ); }
   "greater or equal than"        { return symbol(GTEQ); }
   "not equal than"               { return symbol(NOTEQ); }
-
 
   "add to"                       { return symbol(PLUS); }
   "substract from"               { return symbol(MINUS); }
   "multiply with"                { return symbol(MULT); }
   "divide through"               { return symbol(DIV); }
 
-  /* condition */
-  "in case that"                 {return symbol(IF);}
-  "fallback"                     {return symbol(ELSE);}
+  /* separators */
+  "("                            { return symbol(LPAREN); }
+  ")"                            { return symbol(RPAREN); }
+//  "["                          { return symbol(LBRACK); }
+//  "]"                          { return symbol(RBRACK); }
+  "."                            { return symbol(DOT); }
 
 
-  /* Loop */
-  "as long as"                  {return symbol(WHILE);}
-  
   /* string literal */
   \"                             { yybegin(STRING); string.setLength(0); }
 
@@ -104,7 +102,6 @@ SingleCharacter = [^\r\n\'\\]
 
 <STRING> {
   \"                             { yybegin(YYINITIAL); return symbol(STRING_LITERAL, string.toString()); }
-  
   {StringCharacter}+             { string.append( yytext() ); }
   
   /* escape sequences */
