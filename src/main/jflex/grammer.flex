@@ -37,7 +37,7 @@ WhiteSpace = {LineTerminator} | [ \t\f]
 Identifier = [:jletter:][:jletterdigit:]*
 
 /* floating point literals */
-Number = [0-9]+ \. [0-9]*
+Number = [0-9]+
 
 
 /* string and character literals */
@@ -71,8 +71,8 @@ StringCharacter = [^\r\n\"\\]
 
   "add to"                       { return symbol(PLUS); }
   "substract from"               { return symbol(MINUS); }
-  "multiply with"                { return symbol(MULT); }
-  "divide through"               { return symbol(DIV); }
+  "multiply with"                { return symbol(MULTIPLY); }
+  "divide through"               { return symbol(DIVIDE); }
 
   /* separators */
   "("                            { return symbol(LPAREN); }

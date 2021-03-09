@@ -1,30 +1,41 @@
 import java_cup.runtime.*;
-
-terminal java.lang.Double NUMBER;
-
-
-non terminal Program;
-non terminal ArithmeticOperator, ArithmeticExpression;
-
-
-terminal PLUS, MINUS, MULT, DIV;
-
-terminal SET, AS, IF, ELSE, WHILE, FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
-
-terminal EQ, EQEQ, LT, GT, LTEQ, GTEQ, NOTEQ;
+import instruction.*;
+import java.util.ArrayList;
 
 
 
-terminal LPAREN, RPAREN, DOT;
+terminal        String                  NUMBER;
+terminal                                PLUS, MINUS, MULTIPLY, DIVIDE;
+terminal                                SET, AS, IF, ELSE, WHILE, FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
+terminal                                EQ, EQEQ, LT, GT, LTEQ, GTEQ, NOTEQ;
+terminal                                LPAREN, RPAREN, DOT, IDENTIFIER, STRING_LITERAL;
+
+non terminal    ArrayList<Instruction> ASSIGNMENT_LIST;
+
+non terminal    Instruction            PROGRAM;
+non terminal    Instruction            VALUE;
+non terminal    Instruction            OPERATION;
 
 
-start with Program;
-Program ::= ArithmeticOperator;
+
+start with PROGRAM;
+
+
+PROGRAM             ::= ASSIGNMENT_LIST:al {: RESULT = new InstructionProgram(al); :};
+
+ASSIGNMENT_LIST     ::= {:  RESULT = new ArrayList<Instruction>(); :}
+                        |  ASSIGNMENT_LIST:al OPERATION:o{:  RESULT = al;RESULT.add(o); :};
 
 
 
-ArithmeticOperator::= PLUS | MINUS | MULT | DIV;
-ArithmeticExpression::= NUMBER ArithmeticOperator NUMBER;
+VALUE               ::= NUMBER:n {: RESULT = new NumberInstruction(n); :};
+
+
+OPERATION           ::= VALUE:v {: RESULT = v; :}
+                    | VALUE:l PLUS VALUE:r {: RESULT = new BinaryOperation(BinaryOperator.PLUS, l, r); :}
+                    | VALUE:l MINUS VALUE:r {: RESULT = new BinaryOperation(BinaryOperator.MINUS, l, r); :}
+                    | VALUE:l MULTIPLY VALUE:r {: RESULT = new BinaryOperation(BinaryOperator.MULTIPLY, l, r); :}
+                    | VALUE:l DIVIDE VALUE:r {: RESULT = new BinaryOperation(BinaryOperator.DIVIDE, l, r); :};
 
 
 

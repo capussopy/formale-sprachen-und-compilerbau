@@ -17,7 +17,7 @@ CompareExpression::= <Number> <CompareOperator> <Number>
 <DefineVariable>::= set <Number> as <VariableName>
 
 //Arithmetic Operation
-<ArithmeticOperator>  ::= add to | substract from| multiply with | divide through
+<ArithmeticOperator>  ::= add to | substract from | multiply with | divide through
 <ArithmeticExpression> ::= <Number> <ArithmeticOperator> <Number>
 
 //Conditionals
