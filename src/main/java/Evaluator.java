@@ -43,6 +43,12 @@ public class Evaluator implements InstructionVisitor<Double> {
     }
 
     @Override
+    public Double visitVariableGet(InstructionVariableGet instructionVariableGet) {
+        context.computeIfAbsent(instructionVariableGet.getName(), s -> {throw new RuntimeException();});
+        return context.get(instructionVariableGet.getName());
+    }
+
+    @Override
     public Double visitProgram(InstructionProgram instructionProgram) {
         instructionProgram.getAssignments().forEach(instruction -> instruction.acceptVisitor(this));
         final int lastInstruction = instructionProgram.getAssignments().size() -1;

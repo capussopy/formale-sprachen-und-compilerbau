@@ -1,5 +1,7 @@
 package instruction;
 
+import enumeration.BinaryOperator;
+
 public class InstructionBinaryOperation extends Instruction {
 
     private final BinaryOperator operator;

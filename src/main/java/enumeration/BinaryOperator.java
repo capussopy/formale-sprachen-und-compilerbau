@@ -1,4 +1,4 @@
-package instruction;
+package enumeration;
 
 public enum BinaryOperator {
     PLUS,

@@ -1,11 +1,12 @@
 import java_cup.runtime.*;
 import instruction.*;
+import enumeration.*;
 import java.util.ArrayList;
 
 
 
 terminal        Double                  NUMBER;
-terminal        String                  IDENTIFIER;
+terminal        String                  NAME;
 terminal                                PLUS, MINUS, MULTIPLY, DIVIDE;
 terminal                                SET, AS, IF, ELSE, WHILE, FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
 terminal                                EQ, EQEQ, LT, GT, LTEQ, GTEQ, NOTEQ;
@@ -25,12 +26,14 @@ start with PROGRAM;
 PROGRAM             ::= ASSIGNMENT_LIST:al                              {: RESULT = new InstructionProgram(al); :};
 
 ASSIGNMENT_LIST     ::=                                                 {:  RESULT = new ArrayList<Instruction>(); :}
-                        |   ASSIGNMENT_LIST:al VARIABLE_ASSIGMENT:va    {:  RESULT = al;RESULT.add(va); :}
-                        |   ASSIGNMENT_LIST:al OPERATION:o              {:  RESULT = al;RESULT.add(o); :};
+                        | ASSIGNMENT_LIST:al VARIABLE_ASSIGMENT:va      {:  RESULT = al;RESULT.add(va); :}
+                        | ASSIGNMENT_LIST:al OPERATION:o                {:  RESULT = al;RESULT.add(o); :};
 
-VALUE               ::= NUMBER:n                                        {: RESULT = new InstructionNumber(n); :};
+VALUE               ::= NUMBER:n                                        {: RESULT = new InstructionNumber(n); :}
+                        | NAME:n                                        {: RESULT = new InstructionVariableGet(n); :} ;
 
-VARIABLE_ASSIGMENT  ::= SET VALUE:v AS IDENTIFIER:i                     {: RESULT = new InstructionVariableSet(i, v); :};
+
+VARIABLE_ASSIGMENT  ::= SET VALUE:v AS NAME:n                           {: RESULT = new InstructionVariableSet(n, v); :};
 
 OPERATION           ::= VALUE:v                                         {: RESULT = v; :}
                     | VALUE:l PLUS VALUE:r                              {: RESULT = new InstructionBinaryOperation(BinaryOperator.PLUS, l, r); :}

@@ -34,7 +34,7 @@ WhiteSpace = {LineTerminator} | [ \t\f]
 
 
 /* identifiers */
-Identifier = [:jletter:][:jletterdigit:]*
+Name = [:jletter:][:jletterdigit:]*
 
 /* floating point literals */
 Number = \-?\d*\.?\d+
@@ -97,7 +97,7 @@ StringCharacter = [^\r\n\"\\]
 
 
   /* identifiers */ 
-  {Identifier}                   { return symbol(IDENTIFIER, yytext()); }  
+  {Name}                         { return symbol(NAME, yytext()); }
 }
 
 <STRING> {
