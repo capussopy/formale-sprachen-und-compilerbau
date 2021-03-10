@@ -15,23 +15,19 @@ public class Evaluator implements InstructionVisitor<Double> {
     }
 
 
-    @Override
-    public Double handleNumberInstruction(NumberInstruction numberInstruction) {
-        return numberInstruction.getValue();
-    }
 
     @Override
-    public Double handleVariableAssigment(InstructionVariableAssigment variableAssigment) {
-        Double value = variableAssigment.getValue().acceptVisitor(this);
-        context.put(variableAssigment.getIdentifier(), value);
+    public Double visitVariableSet(InstructionVariableSet instructionVariableSet) {
+        Double value = instructionVariableSet.getValue().acceptVisitor(this);
+        context.put(instructionVariableSet.getName(), value);
         return value;
     }
 
     @Override
-    public Double handleBinaryOperation(BinaryOperation operation) {
-        Double left = operation.getLeftOperand().acceptVisitor(this);
-        Double right = operation.getRightOperand().acceptVisitor(this);
-        switch (operation.getOperator()) {
+    public Double visitBinaryOperation(InstructionBinaryOperation instructionBinaryOperation) {
+        Double left = instructionBinaryOperation.getLeftOperand().acceptVisitor(this);
+        Double right = instructionBinaryOperation.getRightOperand().acceptVisitor(this);
+        switch (instructionBinaryOperation.getOperator()) {
             case PLUS:
                 return left + right;
             case MINUS:
@@ -47,9 +43,14 @@ public class Evaluator implements InstructionVisitor<Double> {
     }
 
     @Override
-    public Double handleProgram(InstructionProgram instructionProgram) {
+    public Double visitProgram(InstructionProgram instructionProgram) {
         instructionProgram.getAssignments().forEach(instruction -> instruction.acceptVisitor(this));
         final int lastInstruction = instructionProgram.getAssignments().size() -1;
         return instructionProgram.getAssignments().get(lastInstruction).acceptVisitor(this);
+    }
+
+    @Override
+    public Double visitNumber(InstructionNumber instructionValue) {
+        return  instructionValue.getValue();
     }
 }

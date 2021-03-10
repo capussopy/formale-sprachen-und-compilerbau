@@ -37,7 +37,7 @@ WhiteSpace = {LineTerminator} | [ \t\f]
 Identifier = [:jletter:][:jletterdigit:]*
 
 /* floating point literals */
-Number = \d*\.?\d+
+Number = \-?\d*\.?\d+
 
 
 /* string and character literals */
@@ -69,10 +69,10 @@ StringCharacter = [^\r\n\"\\]
   "greater or equal than"        { return symbol(GTEQ); }
   "not equal than"               { return symbol(NOTEQ); }
 
-  "add to"                       { return symbol(PLUS); }
-  "substract from"               { return symbol(MINUS); }
-  "multiply with"                { return symbol(MULTIPLY); }
-  "divide through"               { return symbol(DIVIDE); }
+  "add"                          { return symbol(PLUS); }
+  "substract"                    { return symbol(MINUS); }
+  "multiply"                     { return symbol(MULTIPLY); }
+  "divide"                       { return symbol(DIVIDE); }
 
   /* separators */
   "("                            { return symbol(LPAREN); }

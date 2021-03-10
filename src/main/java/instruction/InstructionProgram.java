@@ -12,7 +12,7 @@ public class InstructionProgram extends Instruction {
 
     @Override
     public <T> T acceptVisitor(InstructionVisitor<T> visitor) {
-        return visitor.handleProgram(this);
+        return visitor.visitProgram(this);
     }
 
     public List<Instruction> getAssignments() {

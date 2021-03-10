@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 
-terminal        String                  NUMBER;
+terminal        Double                  NUMBER;
 terminal        String                  IDENTIFIER;
 terminal                                PLUS, MINUS, MULTIPLY, DIVIDE;
 terminal                                SET, AS, IF, ELSE, WHILE, FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
@@ -28,15 +28,15 @@ ASSIGNMENT_LIST     ::=                                                 {:  RESU
                         |   ASSIGNMENT_LIST:al VARIABLE_ASSIGMENT:va    {:  RESULT = al;RESULT.add(va); :}
                         |   ASSIGNMENT_LIST:al OPERATION:o              {:  RESULT = al;RESULT.add(o); :};
 
-VALUE               ::= NUMBER:n                                        {: RESULT = new NumberInstruction(n); :};
+VALUE               ::= NUMBER:n                                        {: RESULT = new InstructionNumber(n); :};
 
-VARIABLE_ASSIGMENT  ::= SET VALUE:v AS IDENTIFIER:i                     {: RESULT = new InstructionVariableAssigment(i, v); :};
+VARIABLE_ASSIGMENT  ::= SET VALUE:v AS IDENTIFIER:i                     {: RESULT = new InstructionVariableSet(i, v); :};
 
 OPERATION           ::= VALUE:v                                         {: RESULT = v; :}
-                    | VALUE:l PLUS VALUE:r                              {: RESULT = new BinaryOperation(BinaryOperator.PLUS, l, r); :}
-                    | VALUE:l MINUS VALUE:r                             {: RESULT = new BinaryOperation(BinaryOperator.MINUS, l, r); :}
-                    | VALUE:l MULTIPLY VALUE:r                          {: RESULT = new BinaryOperation(BinaryOperator.MULTIPLY, l, r); :}
-                    | VALUE:l DIVIDE VALUE:r                            {: RESULT = new BinaryOperation(BinaryOperator.DIVIDE, l, r); :};
+                    | VALUE:l PLUS VALUE:r                              {: RESULT = new InstructionBinaryOperation(BinaryOperator.PLUS, l, r); :}
+                    | VALUE:l MINUS VALUE:r                             {: RESULT = new InstructionBinaryOperation(BinaryOperator.MINUS, l, r); :}
+                    | VALUE:l MULTIPLY VALUE:r                          {: RESULT = new InstructionBinaryOperation(BinaryOperator.MULTIPLY, l, r); :}
+                    | VALUE:l DIVIDE VALUE:r                            {: RESULT = new InstructionBinaryOperation(BinaryOperator.DIVIDE, l, r); :};
 
 
 

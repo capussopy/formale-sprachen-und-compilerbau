@@ -1,12 +1,12 @@
 package instruction;
 
-public class BinaryOperation extends Instruction {
+public class InstructionBinaryOperation extends Instruction {
 
     private final BinaryOperator operator;
     private final Instruction leftOperand;
     private final Instruction rightOperand;
 
-    public BinaryOperation(BinaryOperator operator, Instruction leftOperand, Instruction rightOperand) {
+    public InstructionBinaryOperation(BinaryOperator operator, Instruction leftOperand, Instruction rightOperand) {
         this.operator = operator;
         this.leftOperand = leftOperand;
         this.rightOperand = rightOperand;
@@ -15,7 +15,7 @@ public class BinaryOperation extends Instruction {
 
     @Override
     public <T> T acceptVisitor(InstructionVisitor<T> visitor) {
-        return visitor.handleBinaryOperation(this);
+        return visitor.visitBinaryOperation(this);
     }
 
     public BinaryOperator getOperator() {
