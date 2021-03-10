@@ -1,9 +1,11 @@
 package instruction;
 
 public interface InstructionVisitor<T> {
+    T handleProgram(InstructionProgram instructionProgram);
+
     T handleNumberInstruction(NumberInstruction numberInstruction);
 
-    T handleBinaryOperation(BinaryOperation operation);
+    T handleVariableAssigment(InstructionVariableAssigment variableAssigment);
 
-    T handleProgram(InstructionProgram instructionProgram);
+    T handleBinaryOperation(BinaryOperation operation);
 }

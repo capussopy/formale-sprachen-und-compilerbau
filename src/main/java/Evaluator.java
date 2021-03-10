@@ -1,7 +1,4 @@
-import instruction.InstructionProgram;
-import instruction.InstructionVisitor;
-import instruction.NumberInstruction;
-import instruction.BinaryOperation;
+import instruction.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +18,13 @@ public class Evaluator implements InstructionVisitor<Double> {
     @Override
     public Double handleNumberInstruction(NumberInstruction numberInstruction) {
         return numberInstruction.getValue();
+    }
+
+    @Override
+    public Double handleVariableAssigment(InstructionVariableAssigment variableAssigment) {
+        Double value = variableAssigment.getValue().acceptVisitor(this);
+        context.put(variableAssigment.getIdentifier(), value);
+        return value;
     }
 
     @Override
@@ -45,6 +49,7 @@ public class Evaluator implements InstructionVisitor<Double> {
     @Override
     public Double handleProgram(InstructionProgram instructionProgram) {
         instructionProgram.getAssignments().forEach(instruction -> instruction.acceptVisitor(this));
-        return 1234D;
+        final int lastInstruction = instructionProgram.getAssignments().size() -1;
+        return instructionProgram.getAssignments().get(lastInstruction).acceptVisitor(this);
     }
 }

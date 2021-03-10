@@ -5,15 +5,16 @@ import java.util.ArrayList;
 
 
 terminal        String                  NUMBER;
+terminal        String                  IDENTIFIER;
 terminal                                PLUS, MINUS, MULTIPLY, DIVIDE;
 terminal                                SET, AS, IF, ELSE, WHILE, FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
 terminal                                EQ, EQEQ, LT, GT, LTEQ, GTEQ, NOTEQ;
-terminal                                LPAREN, RPAREN, DOT, IDENTIFIER, STRING_LITERAL;
+terminal                                LPAREN, RPAREN, DOT, STRING_LITERAL;
 
 non terminal    ArrayList<Instruction> ASSIGNMENT_LIST;
-
 non terminal    Instruction            PROGRAM;
 non terminal    Instruction            VALUE;
+non terminal    Instruction            VARIABLE_ASSIGMENT;
 non terminal    Instruction            OPERATION;
 
 
@@ -21,21 +22,21 @@ non terminal    Instruction            OPERATION;
 start with PROGRAM;
 
 
-PROGRAM             ::= ASSIGNMENT_LIST:al {: RESULT = new InstructionProgram(al); :};
+PROGRAM             ::= ASSIGNMENT_LIST:al                              {: RESULT = new InstructionProgram(al); :};
 
-ASSIGNMENT_LIST     ::= {:  RESULT = new ArrayList<Instruction>(); :}
-                        |  ASSIGNMENT_LIST:al OPERATION:o{:  RESULT = al;RESULT.add(o); :};
+ASSIGNMENT_LIST     ::=                                                 {:  RESULT = new ArrayList<Instruction>(); :}
+                        |   ASSIGNMENT_LIST:al VARIABLE_ASSIGMENT:va    {:  RESULT = al;RESULT.add(va); :}
+                        |   ASSIGNMENT_LIST:al OPERATION:o              {:  RESULT = al;RESULT.add(o); :};
 
+VALUE               ::= NUMBER:n                                        {: RESULT = new NumberInstruction(n); :};
 
+VARIABLE_ASSIGMENT  ::= SET VALUE:v AS IDENTIFIER:i                     {: RESULT = new InstructionVariableAssigment(i, v); :};
 
-VALUE               ::= NUMBER:n {: RESULT = new NumberInstruction(n); :};
-
-
-OPERATION           ::= VALUE:v {: RESULT = v; :}
-                    | VALUE:l PLUS VALUE:r {: RESULT = new BinaryOperation(BinaryOperator.PLUS, l, r); :}
-                    | VALUE:l MINUS VALUE:r {: RESULT = new BinaryOperation(BinaryOperator.MINUS, l, r); :}
-                    | VALUE:l MULTIPLY VALUE:r {: RESULT = new BinaryOperation(BinaryOperator.MULTIPLY, l, r); :}
-                    | VALUE:l DIVIDE VALUE:r {: RESULT = new BinaryOperation(BinaryOperator.DIVIDE, l, r); :};
+OPERATION           ::= VALUE:v                                         {: RESULT = v; :}
+                    | VALUE:l PLUS VALUE:r                              {: RESULT = new BinaryOperation(BinaryOperator.PLUS, l, r); :}
+                    | VALUE:l MINUS VALUE:r                             {: RESULT = new BinaryOperation(BinaryOperator.MINUS, l, r); :}
+                    | VALUE:l MULTIPLY VALUE:r                          {: RESULT = new BinaryOperation(BinaryOperator.MULTIPLY, l, r); :}
+                    | VALUE:l DIVIDE VALUE:r                            {: RESULT = new BinaryOperation(BinaryOperator.DIVIDE, l, r); :};
 
 
 

@@ -37,7 +37,7 @@ WhiteSpace = {LineTerminator} | [ \t\f]
 Identifier = [:jletter:][:jletterdigit:]*
 
 /* floating point literals */
-Number = [0-9]+
+Number = \d*\.?\d+
 
 
 /* string and character literals */
