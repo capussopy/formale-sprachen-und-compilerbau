@@ -7,7 +7,7 @@ public interface InstructionVisitor<T> {
 
     T visitVariableSet(InstructionVariableSet instructionVariableSet);
 
-    T visitBinaryOperation(InstructionBinaryOperation instructionBinaryOperation);
+    T visitBinaryOperation(InstructionNumberOperation instructionNumberOperation);
 
     T visitVariableGet(InstructionVariableGet instructionVariableGet);
 }

@@ -37,10 +37,10 @@ VALUE               ::= NUMBER:n                                        {: RESUL
 VARIABLE_ASSIGMENT  ::= SET VALUE:v AS NAME:n                           {: RESULT = new InstructionVariableSet(n, v); :};
 
 OPERATION           ::= VALUE:v                                         {: RESULT = v; :}
-                    | VALUE:l PLUS VALUE:r                              {: RESULT = new InstructionBinaryOperation(BinaryOperator.PLUS, l, r); :}
-                    | VALUE:l MINUS VALUE:r                             {: RESULT = new InstructionBinaryOperation(BinaryOperator.MINUS, l, r); :}
-                    | VALUE:l MULTIPLY VALUE:r                          {: RESULT = new InstructionBinaryOperation(BinaryOperator.MULTIPLY, l, r); :}
-                    | VALUE:l DIVIDE VALUE:r                            {: RESULT = new InstructionBinaryOperation(BinaryOperator.DIVIDE, l, r); :};
+                    | VALUE:l PLUS VALUE:r                              {: RESULT = new InstructionNumberOperation(BinaryOperator.PLUS, l, r); :}
+                    | VALUE:l MINUS VALUE:r                             {: RESULT = new InstructionNumberOperation(BinaryOperator.MINUS, l, r); :}
+                    | VALUE:l MULTIPLY VALUE:r                          {: RESULT = new InstructionNumberOperation(BinaryOperator.MULTIPLY, l, r); :}
+                    | VALUE:l DIVIDE VALUE:r                            {: RESULT = new InstructionNumberOperation(BinaryOperator.DIVIDE, l, r); :};
 
 
 

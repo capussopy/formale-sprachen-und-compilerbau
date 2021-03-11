@@ -25,10 +25,10 @@ public class Evaluator implements InstructionVisitor<BigDecimal> {
     }
 
     @Override
-    public BigDecimal visitBinaryOperation(InstructionBinaryOperation instructionBinaryOperation) {
-        BigDecimal left = instructionBinaryOperation.getLeftOperand().acceptVisitor(this);
-        BigDecimal right = instructionBinaryOperation.getRightOperand().acceptVisitor(this);
-        switch (instructionBinaryOperation.getOperator()) {
+    public BigDecimal visitBinaryOperation(InstructionNumberOperation instructionNumberOperation) {
+        BigDecimal left = instructionNumberOperation.getLeftOperand().acceptVisitor(this);
+        BigDecimal right = instructionNumberOperation.getRightOperand().acceptVisitor(this);
+        switch (instructionNumberOperation.getOperator()) {
             case PLUS:
                 return left.add(right);
             case MINUS:

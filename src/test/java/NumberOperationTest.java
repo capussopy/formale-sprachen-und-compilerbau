@@ -6,7 +6,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class BinaryOperationTest extends ShellTest {
+public class NumberOperationTest extends ShellTest {
 
 
     @Test

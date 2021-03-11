@@ -18,6 +18,10 @@ public class ShellTest {
         context = new HashMap<>();
     }
 
+    protected void addToContext(String key, BigDecimal value){
+        context.put(key, value);
+    }
+
 
     protected Object parseExpression(String expression) throws Exception {
         StringReader reader = new StringReader(expression);
@@ -26,14 +30,4 @@ public class ShellTest {
         Instruction instruction = (Instruction) symbol.value;
         return instruction.acceptVisitor(new Evaluator(context));
     }
-
-
-    protected void addToContext(String key, BigDecimal value){
-        context.put(key, value);
-    }
-
-
-
-
-
 }

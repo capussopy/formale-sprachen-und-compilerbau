@@ -2,13 +2,13 @@ package instruction;
 
 import enumeration.BinaryOperator;
 
-public class InstructionBinaryOperation extends Instruction {
+public class InstructionNumberOperation extends Instruction {
 
     private final BinaryOperator operator;
     private final Instruction leftOperand;
     private final Instruction rightOperand;
 
-    public InstructionBinaryOperation(BinaryOperator operator, Instruction leftOperand, Instruction rightOperand) {
+    public InstructionNumberOperation(BinaryOperator operator, Instruction leftOperand, Instruction rightOperand) {
         this.operator = operator;
         this.leftOperand = leftOperand;
         this.rightOperand = rightOperand;
