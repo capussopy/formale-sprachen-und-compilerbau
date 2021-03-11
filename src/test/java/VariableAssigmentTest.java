@@ -22,14 +22,15 @@ public class VariableAssigmentTest extends ShellTest {
 
     @Test
     public void getVariable() throws Exception {
-        Map<String, BigDecimal> context = Map.of("amount", new BigDecimal("11.1"));
-        assertThat(parseExpression("amount", context)).isEqualTo(new BigDecimal("11.1"));
+        addToContext("amount", new BigDecimal("11.1"));
+        assertThat(parseExpression("amount")).isEqualTo(new BigDecimal("11.1"));
     }
 
     @Test
     public void getVariableWithMultipleAssignments() throws Exception {
-        Map<String, BigDecimal> context = Map.of("amount", new BigDecimal("11.1"), "amount2", new BigDecimal("-10"));
-        assertThat(parseExpression("amount", context)).isEqualTo(new BigDecimal("11.1"));
+        addToContext("amount", new BigDecimal("11.1"));
+        addToContext("amount2", new BigDecimal("-10"));
+        assertThat(parseExpression("amount")).isEqualTo(new BigDecimal("11.1"));
     }
 
 

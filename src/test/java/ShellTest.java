@@ -1,6 +1,7 @@
 import instruction.Instruction;
 import java_cup.runtime.DefaultSymbolFactory;
 import java_cup.runtime.Symbol;
+import org.junit.Before;
 
 import java.io.StringReader;
 import java.math.BigDecimal;
@@ -10,7 +11,15 @@ import java.util.Map;
 
 public class ShellTest {
 
-    protected Object parseExpression(String expression, Map<String, BigDecimal> context) throws Exception {
+    private Map<String, BigDecimal> context;
+
+    @Before
+    public void init(){
+        context = new HashMap<>();
+    }
+
+
+    protected Object parseExpression(String expression) throws Exception {
         StringReader reader = new StringReader(expression);
         Scanner scanner = new Scanner(reader);
         Symbol symbol = new parser(scanner, new DefaultSymbolFactory()).parse();
@@ -19,9 +28,12 @@ public class ShellTest {
     }
 
 
-    protected Object parseExpression(String expression) throws Exception {
-        return parseExpression(expression, new HashMap<>());
+    protected void addToContext(String key, BigDecimal value){
+        context.put(key, value);
     }
+
+
+
 
 
 }

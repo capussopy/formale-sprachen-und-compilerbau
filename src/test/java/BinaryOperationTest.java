@@ -18,8 +18,9 @@ public class BinaryOperationTest extends ShellTest {
 
     @Test
     public void variableAddition() throws Exception{
-        Map<String, BigDecimal> context = Map.of("amount1", new BigDecimal("20.2"), "amount2", new BigDecimal("-2.4"));
-        assertThat(parseExpression("amount1 add amount2", context)).isEqualTo(new BigDecimal("17.8"));
+        addToContext("amount1", new BigDecimal("20.2"));
+        addToContext("amount2", new BigDecimal("-2.4"));
+        assertThat(parseExpression("amount1 add amount2")).isEqualTo(new BigDecimal("17.8"));
     }
 
 
@@ -32,8 +33,9 @@ public class BinaryOperationTest extends ShellTest {
 
     @Test
     public void variableSubstract() throws Exception{
-        Map<String, BigDecimal> context = Map.of("amount1", new BigDecimal("20.2"), "amount2", new BigDecimal("2.4"));
-        assertThat(parseExpression( "amount1 substract amount2", context)).isEqualTo(new BigDecimal("17.8"));
+        addToContext("amount1", new BigDecimal("20.2"));
+        addToContext("amount2", new BigDecimal("2.4"));
+        assertThat(parseExpression( "amount1 substract amount2")).isEqualTo(new BigDecimal("17.8"));
     }
 
 
@@ -46,8 +48,9 @@ public class BinaryOperationTest extends ShellTest {
 
     @Test
     public void variableMultiply() throws Exception{
-        Map<String, BigDecimal> context = Map.of("amount1", new BigDecimal("20"), "amount2", new BigDecimal("-3"));
-        assertThat(parseExpression( "amount1 multiply amount2", context)).isEqualTo(new BigDecimal("-60"));
+        addToContext("amount1", new BigDecimal("20"));
+        addToContext("amount2", new BigDecimal("-3"));
+        assertThat(parseExpression( "amount1 multiply amount2")).isEqualTo(new BigDecimal("-60"));
     }
 
     @Test
@@ -59,8 +62,9 @@ public class BinaryOperationTest extends ShellTest {
 
     @Test
     public void variableDivision() throws Exception{
-        Map<String, BigDecimal> context = Map.of("amount1", new BigDecimal("200"), "amount2", new BigDecimal("20"));
-        assertThat(parseExpression("amount1 divide amount2", context)).isEqualTo(new BigDecimal("10"));
+        addToContext("amount1", new BigDecimal("200"));
+        addToContext("amount2", new BigDecimal("20"));
+        assertThat(parseExpression("amount1 divide amount2")).isEqualTo(new BigDecimal("10"));
     }
 
 
