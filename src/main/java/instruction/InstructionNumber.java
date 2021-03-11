@@ -1,16 +1,18 @@
 package instruction;
 
+import java.math.BigDecimal;
+
 public class InstructionNumber extends Instruction {
 
-    private final Double value;
+    private final BigDecimal value;
 
 
-    public InstructionNumber(Double value) {
+    public InstructionNumber(BigDecimal value) {
         this.value = value;
     }
 
 
-    public Double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 

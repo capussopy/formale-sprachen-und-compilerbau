@@ -1,4 +1,5 @@
 import java_cup.runtime.*;
+import java.math.BigDecimal;
 
 %%
 
@@ -87,8 +88,8 @@ StringCharacter = [^\r\n\"\\]
 
 
   /* numeric literals */
-  {Number}                { return symbol(NUMBER, new Double(yytext())); }
-  {Number}[dD]            { return symbol(NUMBER, new Double(yytext().substring(0,yylength()-1))); }
+  {Number}                { return symbol(NUMBER, new BigDecimal(yytext())); }
+  {Number}[dD]            { return symbol(NUMBER, new BigDecimal(yytext().substring(0,yylength()-1))); }
   
 
 

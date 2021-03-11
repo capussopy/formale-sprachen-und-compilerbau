@@ -1,12 +1,14 @@
 import instruction.*;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Evaluator implements InstructionVisitor<Double> {
-    private final Map<String, Double> context;
+public class Evaluator implements InstructionVisitor<BigDecimal> {
+    private final Map<String, BigDecimal> context;
 
-    public Evaluator(Map<String, Double> context) {
+    public Evaluator(Map<String, BigDecimal> context) {
         this.context = context;
     }
 
@@ -15,27 +17,26 @@ public class Evaluator implements InstructionVisitor<Double> {
     }
 
 
-
     @Override
-    public Double visitVariableSet(InstructionVariableSet instructionVariableSet) {
-        Double value = instructionVariableSet.getValue().acceptVisitor(this);
+    public BigDecimal visitVariableSet(InstructionVariableSet instructionVariableSet) {
+        BigDecimal value = instructionVariableSet.getValue().acceptVisitor(this);
         context.put(instructionVariableSet.getName(), value);
         return value;
     }
 
     @Override
-    public Double visitBinaryOperation(InstructionBinaryOperation instructionBinaryOperation) {
-        Double left = instructionBinaryOperation.getLeftOperand().acceptVisitor(this);
-        Double right = instructionBinaryOperation.getRightOperand().acceptVisitor(this);
+    public BigDecimal visitBinaryOperation(InstructionBinaryOperation instructionBinaryOperation) {
+        BigDecimal left = instructionBinaryOperation.getLeftOperand().acceptVisitor(this);
+        BigDecimal right = instructionBinaryOperation.getRightOperand().acceptVisitor(this);
         switch (instructionBinaryOperation.getOperator()) {
             case PLUS:
-                return left + right;
+                return left.add(right);
             case MINUS:
-                return left - right;
+                return left.subtract(right);
             case MULTIPLY:
-                return left * right;
+                return left.multiply(right);
             case DIVIDE:
-                return left / right;
+                return left.divide(right, MathContext.DECIMAL128);
             default:
                 assert false;
                 return null;
@@ -43,20 +44,22 @@ public class Evaluator implements InstructionVisitor<Double> {
     }
 
     @Override
-    public Double visitVariableGet(InstructionVariableGet instructionVariableGet) {
-        context.computeIfAbsent(instructionVariableGet.getName(), s -> {throw new RuntimeException();});
+    public BigDecimal visitVariableGet(InstructionVariableGet instructionVariableGet) {
+        context.computeIfAbsent(instructionVariableGet.getName(), s -> {
+            throw new RuntimeException();
+        });
         return context.get(instructionVariableGet.getName());
     }
 
     @Override
-    public Double visitProgram(InstructionProgram instructionProgram) {
+    public BigDecimal visitProgram(InstructionProgram instructionProgram) {
         instructionProgram.getAssignments().forEach(instruction -> instruction.acceptVisitor(this));
-        final int lastInstruction = instructionProgram.getAssignments().size() -1;
+        final int lastInstruction = instructionProgram.getAssignments().size() - 1;
         return instructionProgram.getAssignments().get(lastInstruction).acceptVisitor(this);
     }
 
     @Override
-    public Double visitNumber(InstructionNumber instructionValue) {
-        return  instructionValue.getValue();
+    public BigDecimal visitNumber(InstructionNumber instructionValue) {
+        return instructionValue.getValue();
     }
 }
