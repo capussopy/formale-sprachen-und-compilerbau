@@ -56,10 +56,10 @@ StringCharacter = [^\r\n\"\\]
   "in case that"                {return symbol(IN_CASE_THAT);}
   "fallback"                    {return symbol(FALLBACK);}
   "as long as"                  {return symbol(AS_LONG_AS);}
-  "task"                        {return symbol(FUNCTION);}
-  "takes"                       {return symbol(PARAMS);}
-  "execute"                     {return symbol(FUNCTION_CALL);}
-  "with"                        {return symbol(FUNCTION_PARAMS);}
+  "task"                        {return symbol(TASK);}
+  "takes"                       {return symbol(TAKES);}
+  "execute"                     {return symbol(EXECUTE);}
+  "with"                        {return symbol(WITH);}
 
   /* operators */
   //"="                            { return symbol(EQ); }
@@ -80,7 +80,7 @@ StringCharacter = [^\r\n\"\\]
 //  ")"                            { return symbol(RPAREN); }
   "["                          { return symbol(LBRACK); }
   "]"                          { return symbol(RBRACK); }
-//  "."                            { return symbol(DOT); }
+  ","                            { return symbol(COMMA); }
 
 
   /* string literal */
@@ -102,7 +102,7 @@ StringCharacter = [^\r\n\"\\]
 }
 
 <STRING> {
-  \"                             { yybegin(YYINITIAL); return symbol(STRING_LITERAL, string.toString()); }
+  //\"                             { yybegin(YYINITIAL); return symbol(STRING_LITERAL, string.toString()); }
   {StringCharacter}+             { string.append( yytext() ); }
   
   /* escape sequences */

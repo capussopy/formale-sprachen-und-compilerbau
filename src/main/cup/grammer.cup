@@ -9,23 +9,29 @@ terminal        BigDecimal              NUMBER;
 terminal        String                  NAME;
 terminal                                PLUS, MINUS, MULTIPLY, DIVIDE;
 terminal                                EQUAL, LOWER, GREATER, LOWER_OR_EQUAL, GREATER_OR_EQUAL, NOT_EQUAL;
-terminal                                LBRACK, RBRACK, STRING_LITERAL;
+terminal                                LBRACK, RBRACK;
 terminal                                SET, AS;
 terminal                                IN_CASE_THAT, FALLBACK;
 terminal                                AS_LONG_AS;
-terminal                                FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
+terminal                                TASK, TAKES, COMMA;
+terminal                                EXECUTE, WITH;
 
 
-non terminal    ArrayList<Instruction> EXPRESSION_LIST;
+non terminal    ArrayList<Instruction> EXPRESSION_LIST, VALUE_LIST;
+non terminal    ArrayList<String>      VARIABLE_LIST;
 non terminal    Instruction            PROGRAM, BLOCK;
 non terminal    Instruction            VALUE;
 non terminal    Instruction            VARIABLE_SET;
 non terminal    Instruction            OPERATION;
 non terminal    Instruction            CONDITIONAL, CONDITION;
 non terminal    Instruction            LOOP;
+non terminal    Instruction            FUNCTION, FUNCTION_CALL;
+
 
 precedence left PLUS, MINUS;
 precedence left DIVIDE, MULTIPLY;
+precedence left VALUE, NAME;
+precedence left VALUE, NUMBER;
 
 start with PROGRAM;
 
@@ -34,11 +40,13 @@ PROGRAM             ::= EXPRESSION_LIST:el                              {: RESUL
 BLOCK               ::= LBRACK PROGRAM:p RBRACK                         {: RESULT = p; :};
 
 EXPRESSION_LIST     ::=                                                 {:  RESULT = new ArrayList<Instruction>(); :}
-                        | EXPRESSION_LIST:el VARIABLE_SET:va            {:  RESULT = el;RESULT.add(va); :}
+                        | EXPRESSION_LIST:el VARIABLE_SET:va            {:  RESULT = el; RESULT.add(va); :}
                         | EXPRESSION_LIST:el VALUE:v                    {:  RESULT = el; RESULT.add(v); :}
                         | EXPRESSION_LIST:el CONDITION:c                {:  RESULT = el; RESULT.add(c); :}
-                        | EXPRESSION_LIST:el CONDITIONAL:c              {:  RESULT = el;RESULT.add(c); :}
-                        | EXPRESSION_LIST:el LOOP:l                     {:  RESULT = el; RESULT.add(l); :};
+                        | EXPRESSION_LIST:el CONDITIONAL:c              {:  RESULT = el; RESULT.add(c); :}
+                        | EXPRESSION_LIST:el LOOP:l                     {:  RESULT = el; RESULT.add(l); :}
+                        | EXPRESSION_LIST:el FUNCTION:f                 {:  RESULT = el; RESULT.add(f); :}
+                        | EXPRESSION_LIST:el FUNCTION_CALL:fl           {:  RESULT = el; RESULT.add(fl); :};
 
 
 
@@ -69,5 +77,20 @@ CONDITION          ::= VALUE:l EQUAL VALUE:r                                {: R
 
 
 LOOP              ::= AS_LONG_AS CONDITION:c BLOCK:b                        {: RESULT = new InstructionLoop(c, b); :};
+
+
+VARIABLE_LIST   ::=                                                          {: RESULT = new ArrayList<String>(); :}
+                   | NAME:n                                                  {: RESULT = new ArrayList<String>(); RESULT.add(n); :}
+                   | VARIABLE_LIST:vl COMMA NAME:n                           {: RESULT = vl; RESULT.add(n); :};
+
+
+FUNCTION        ::= TASK NAME:n TAKES VARIABLE_LIST:vl BLOCK:b               {: RESULT = new InstructionFunctionDefinition(n, vl, b); :};
+
+
+VALUE_LIST        ::=                                                       {: RESULT = new ArrayList<Instruction>(); :}
+                    | VALUE:v                                               {: RESULT = new ArrayList<Instruction>(); RESULT.add(v); :}
+                    | VALUE_LIST:vl COMMA VALUE:v                           {: RESULT =  vl; RESULT.add(v); :};
+
+FUNCTION_CALL   ::= EXECUTE NAME:n WITH VALUE_LIST:vl                       {: RESULT = new InstructionFunctionCall(n, vl); :};
 
 

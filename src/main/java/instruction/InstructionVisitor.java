@@ -16,4 +16,8 @@ public interface InstructionVisitor<T> {
     T visitConditional(InstructionConditional instructionConditional);
 
     T visitLoop(InstructionLoop instructionLoop);
+
+    T visitFunctionDefinition(InstructionFunctionDefinition instructionFunctionDefinition);
+
+    T visitFunctionCall(InstructionFunctionCall instructionFunctionCall);
 }

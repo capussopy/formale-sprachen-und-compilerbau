@@ -1,15 +1,18 @@
+
+import core.ContextStore;
 import instruction.*;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class Evaluator implements InstructionVisitor<Object> {
-    private final Map<String, Object> context;
+public class Evaluator extends ContextStore implements InstructionVisitor<Object> {
 
     public Evaluator(Map<String, Object> context) {
-        this.context = context;
+        super(context);
     }
 
     public Evaluator() {
@@ -20,7 +23,7 @@ public class Evaluator implements InstructionVisitor<Object> {
     @Override
     public BigDecimal visitVariableSet(InstructionVariableSet instructionVariableSet) {
         BigDecimal value = (BigDecimal) instructionVariableSet.getValue().acceptVisitor(this);
-        context.put(instructionVariableSet.getName(), value);
+        addVariable(instructionVariableSet.getName(), value);
         return value;
     }
 
@@ -45,10 +48,7 @@ public class Evaluator implements InstructionVisitor<Object> {
 
     @Override
     public BigDecimal visitVariableGet(InstructionVariableGet instructionVariableGet) {
-        context.computeIfAbsent(instructionVariableGet.getName(), s -> {
-            throw new RuntimeException();
-        });
-        return (BigDecimal) context.get(instructionVariableGet.getName());
+        return getVariable(instructionVariableGet.getName()) ;
     }
 
     @Override
@@ -76,33 +76,66 @@ public class Evaluator implements InstructionVisitor<Object> {
 
     @Override
     public Object visitConditional(InstructionConditional instructionConditional) {
-       Boolean condition = (Boolean) instructionConditional.getCondition().acceptVisitor(this);
-       if(condition){
-           return instructionConditional.getTrueBlock().acceptVisitor(this);
-       }
-       return instructionConditional.getFalseBlock().acceptVisitor(this);
+        Boolean condition = (Boolean) instructionConditional.getCondition().acceptVisitor(this);
+        if (condition) {
+            return instructionConditional.getTrueBlock().acceptVisitor(this);
+        }
+        return instructionConditional.getFalseBlock().acceptVisitor(this);
     }
 
     @Override
     public Object visitLoop(InstructionLoop instructionLoop) {
-        while ((Boolean) instructionLoop.getCondition().acceptVisitor(this)){
+        while ((Boolean) instructionLoop.getCondition().acceptVisitor(this)) {
             instructionLoop.getBlock().acceptVisitor(this);
         }
         return null;
     }
 
     @Override
-    public Object visitProgram(InstructionProgram instructionProgram) {
-        instructionProgram.getAssignments().forEach(instruction -> instruction.acceptVisitor(this));
-        if(!instructionProgram.getAssignments().isEmpty()){
-            final int lastInstruction = instructionProgram.getAssignments().size() - 1;
-            return instructionProgram.getAssignments().get(lastInstruction).acceptVisitor(this);
-        }
+    public Object visitFunctionDefinition(InstructionFunctionDefinition instructionFunctionDefinition) {
+        addFunction(instructionFunctionDefinition.getName(), instructionFunctionDefinition);
         return null;
+    }
+
+    @Override
+    public Object visitFunctionCall(InstructionFunctionCall instructionFunctionCall) {
+        InstructionFunctionDefinition function = getFunction(instructionFunctionCall.getName());
+        List<String> names = function.getValues();
+        List<Instruction> values = instructionFunctionCall.getValues();
+
+        if(names.size() != values.size()){
+            throw new RuntimeException("The parameter size not matching for this function");
+        }
+
+        Map<String, Object> context = new HashMap<>();
+
+        for(int i=0; i< names.size(); i++){
+            context.put(names.get(i), values.get(i).acceptVisitor(this));
+        }
+
+        createContext(context);
+
+        Object value = function.getBlock().acceptVisitor(this);
+
+        destroyContext();
+
+        return value;
     }
 
     @Override
     public BigDecimal visitNumber(InstructionNumber instructionValue) {
         return instructionValue.getValue();
     }
+
+    @Override
+    public Object visitProgram(InstructionProgram instructionProgram) {
+        instructionProgram.getAssignments().forEach(instruction -> instruction.acceptVisitor(this));
+        if (!instructionProgram.getAssignments().isEmpty()) {
+            final int lastInstruction = instructionProgram.getAssignments().size() - 1;
+            return instructionProgram.getAssignments().get(lastInstruction).acceptVisitor(this);
+        }
+        return null;
+    }
+
+
 }
