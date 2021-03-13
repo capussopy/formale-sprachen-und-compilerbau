@@ -1,5 +1,6 @@
 package core;
 
+import core.exception.ContextException;
 import instruction.InstructionFunctionDefinition;
 
 import java.math.BigDecimal;
@@ -32,12 +33,12 @@ public abstract class ContextStore {
 
 
     protected BigDecimal getVariable(String name) {
-        context.computeIfAbsent(name, s -> { throw new RuntimeException(); });
+        context.computeIfAbsent(name, s -> { throw new ContextException("Variable "+ name +" not defined"); });
         return (BigDecimal) context.get(name);
     }
 
     protected InstructionFunctionDefinition getFunction(String name){
-        context.computeIfAbsent(FUNCTION+name, s -> { throw new RuntimeException(); });
+        context.computeIfAbsent(FUNCTION+name, s -> { throw new ContextException("Function "+ name + "not defined"); });
         return (InstructionFunctionDefinition) context.get(FUNCTION+name);
     }
 

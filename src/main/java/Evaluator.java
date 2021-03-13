@@ -1,5 +1,8 @@
-
 import core.ContextStore;
+import core.VoidObject;
+import core.exception.BinaryOperationException;
+import core.exception.BooleanConditionException;
+import core.exception.FunctionException;
 import instruction.*;
 
 import java.math.BigDecimal;
@@ -7,7 +10,6 @@ import java.math.MathContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Evaluator extends ContextStore implements InstructionVisitor<Object> {
 
@@ -29,7 +31,7 @@ public class Evaluator extends ContextStore implements InstructionVisitor<Object
 
     @Override
     public BigDecimal visitBinaryOperation(InstructionNumberOperation instructionNumberOperation) {
-        BigDecimal left =  (BigDecimal) instructionNumberOperation.getLeftOperand().acceptVisitor(this);
+        BigDecimal left = (BigDecimal) instructionNumberOperation.getLeftOperand().acceptVisitor(this);
         BigDecimal right = (BigDecimal) instructionNumberOperation.getRightOperand().acceptVisitor(this);
         switch (instructionNumberOperation.getOperator()) {
             case PLUS:
@@ -41,21 +43,20 @@ public class Evaluator extends ContextStore implements InstructionVisitor<Object
             case DIVIDE:
                 return left.divide(right, MathContext.DECIMAL128);
             default:
-                assert false;
-                return null;
+                throw new BinaryOperationException("Binary Operation not found");
         }
     }
 
     @Override
     public BigDecimal visitVariableGet(InstructionVariableGet instructionVariableGet) {
-        return getVariable(instructionVariableGet.getName()) ;
+        return getVariable(instructionVariableGet.getName());
     }
 
     @Override
     public Boolean visitBooleanCondition(InstructionBooleanCondition instructionBooleanCondition) {
-        BigDecimal left =  (BigDecimal) instructionBooleanCondition.getLeft().acceptVisitor(this);
+        BigDecimal left = (BigDecimal) instructionBooleanCondition.getLeft().acceptVisitor(this);
         BigDecimal right = (BigDecimal) instructionBooleanCondition.getRight().acceptVisitor(this);
-        switch (instructionBooleanCondition.getCondition()){
+        switch (instructionBooleanCondition.getCondition()) {
             case EQUAL:
                 return left.compareTo(right) == 0;
             case LOWER:
@@ -69,8 +70,7 @@ public class Evaluator extends ContextStore implements InstructionVisitor<Object
             case LOWER_OR_EQUAL:
                 return left.compareTo(right) <= 0;
             default:
-                assert false;
-                return null;
+                throw new BooleanConditionException("Boolean Condition not found");
         }
     }
 
@@ -84,17 +84,17 @@ public class Evaluator extends ContextStore implements InstructionVisitor<Object
     }
 
     @Override
-    public Object visitLoop(InstructionLoop instructionLoop) {
+    public VoidObject visitLoop(InstructionLoop instructionLoop) {
         while ((Boolean) instructionLoop.getCondition().acceptVisitor(this)) {
             instructionLoop.getBlock().acceptVisitor(this);
         }
-        return null;
+        return VoidObject.instance();
     }
 
     @Override
-    public Object visitFunctionDefinition(InstructionFunctionDefinition instructionFunctionDefinition) {
+    public VoidObject visitFunctionDefinition(InstructionFunctionDefinition instructionFunctionDefinition) {
         addFunction(instructionFunctionDefinition.getName(), instructionFunctionDefinition);
-        return null;
+        return VoidObject.instance();
     }
 
     @Override
@@ -103,13 +103,13 @@ public class Evaluator extends ContextStore implements InstructionVisitor<Object
         List<String> names = function.getValues();
         List<Instruction> values = instructionFunctionCall.getValues();
 
-        if(names.size() != values.size()){
-            throw new RuntimeException("The parameter size not matching for this function");
+        if (names.size() != values.size()) {
+            throw new FunctionException("Number of params not matching");
         }
 
         Map<String, Object> context = new HashMap<>();
 
-        for(int i=0; i< names.size(); i++){
+        for (int i = 0; i < names.size(); i++) {
             context.put(names.get(i), values.get(i).acceptVisitor(this));
         }
 
@@ -134,7 +134,7 @@ public class Evaluator extends ContextStore implements InstructionVisitor<Object
             final int lastInstruction = instructionProgram.getAssignments().size() - 1;
             return instructionProgram.getAssignments().get(lastInstruction).acceptVisitor(this);
         }
-        return null;
+        return VoidObject.instance();
     }
 
 

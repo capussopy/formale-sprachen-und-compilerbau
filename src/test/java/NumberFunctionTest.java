@@ -1,3 +1,6 @@
+import core.VoidObject;
+import core.exception.ContextException;
+import core.exception.FunctionException;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -9,7 +12,7 @@ public class NumberFunctionTest extends ShellTest {
 
     @Test
     public void defineFunction() throws Exception {
-        assertThat(parseExpression("task calculate takes amount, quantity [ amount multiply quantity ]")).isEqualTo(null);
+        assertThat(parseExpression("task calculate takes amount, quantity [ amount multiply quantity ]")).isInstanceOf(VoidObject.class);
     }
 
     @Test(expected = RuntimeException.class)
@@ -27,6 +30,12 @@ public class NumberFunctionTest extends ShellTest {
         assertThat(parseExpression(expr)).isEqualTo(new BigDecimal("200"));
     }
 
+    @Test(expected = ContextException.class)
+    public void executeUndefinedFunction() throws Exception {
+      parseExpression("execute calculate with 10,20");
+    }
+
+
 
     @Test
     public void executeFunctionWithVariables() throws Exception {
@@ -38,14 +47,14 @@ public class NumberFunctionTest extends ShellTest {
     }
 
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = FunctionException.class)
     public void executeFunctionWithToManyParams() throws Exception {
         String expr = "task calculate takes amount, quantity [ amount multiply quantity ]" +
                 "execute calculate with 10,20,30";
        parseExpression(expr);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = FunctionException.class)
     public void executeFunctionWithFewParams() throws Exception {
         String expr = "task calculate takes amount, quantity [ amount multiply quantity ]" +
                 "execute calculate with 10";

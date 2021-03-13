@@ -1,5 +1,7 @@
 package instruction;
 
+import java.math.BigDecimal;
+
 public interface InstructionVisitor<T> {
     T visitProgram(InstructionProgram instructionProgram);
 

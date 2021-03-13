@@ -1,3 +1,4 @@
+import core.exception.ContextException;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ public class VariableAssigmentTest extends ShellTest {
     }
 
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = ContextException.class)
     public void getInvalidVariable() throws Exception {
         parseExpression("amount");
     }
