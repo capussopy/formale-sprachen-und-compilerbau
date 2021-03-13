@@ -84,6 +84,14 @@ public class Evaluator implements InstructionVisitor<Object> {
     }
 
     @Override
+    public Object visitLoop(InstructionLoop instructionLoop) {
+        while ((Boolean) instructionLoop.getCondition().acceptVisitor(this)){
+            instructionLoop.getBlock().acceptVisitor(this);
+        }
+        return null;
+    }
+
+    @Override
     public Object visitProgram(InstructionProgram instructionProgram) {
         instructionProgram.getAssignments().forEach(instruction -> instruction.acceptVisitor(this));
         if(!instructionProgram.getAssignments().isEmpty()){

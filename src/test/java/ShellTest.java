@@ -28,6 +28,7 @@ public class ShellTest {
         Scanner scanner = new Scanner(reader);
         Symbol symbol = new parser(scanner, new DefaultSymbolFactory()).parse();
         Instruction instruction = (Instruction) symbol.value;
-        return instruction.acceptVisitor(new Evaluator(context));
+        Evaluator evaluator = new Evaluator(context);
+        return instruction.acceptVisitor(evaluator);
     }
 }

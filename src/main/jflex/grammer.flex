@@ -55,7 +55,7 @@ StringCharacter = [^\r\n\"\\]
   "as"                          {return symbol(AS);}
   "in case that"                {return symbol(IN_CASE_THAT);}
   "fallback"                    {return symbol(FALLBACK);}
-  "as long as"                  {return symbol(WHILE);}
+  "as long as"                  {return symbol(AS_LONG_AS);}
   "task"                        {return symbol(FUNCTION);}
   "takes"                       {return symbol(PARAMS);}
   "execute"                     {return symbol(FUNCTION_CALL);}
@@ -80,7 +80,7 @@ StringCharacter = [^\r\n\"\\]
 //  ")"                            { return symbol(RPAREN); }
   "["                          { return symbol(LBRACK); }
   "]"                          { return symbol(RBRACK); }
-  "."                            { return symbol(DOT); }
+//  "."                            { return symbol(DOT); }
 
 
   /* string literal */
