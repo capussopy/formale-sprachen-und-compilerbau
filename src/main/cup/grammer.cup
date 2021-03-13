@@ -10,7 +10,7 @@ terminal        BigDecimal              NUMBER;
 terminal        String                  NAME;
 terminal                                PLUS, MINUS, MULTIPLY, DIVIDE;
 terminal                                SET, AS, IN_CASE_THAT, FALLBACK, WHILE, FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
-terminal                                EQUALS, LOWER, GREATER, LOWER_OR_EQUALS, GREATER_OR_EQUALS, NOT_EQUALS;
+terminal                                EQUAL, LOWER, GREATER, LOWER_OR_EQUAL, GREATER_OR_EQUAL, NOT_EQUAL;
 terminal                                LBRACK, RBRACK, DOT, STRING_LITERAL;
 
 non terminal    ArrayList<Instruction> EXPRESSION_LIST;
@@ -26,7 +26,7 @@ start with PROGRAM;
 
 
 PROGRAM             ::= EXPRESSION_LIST:el                              {: RESULT = new InstructionProgram(el); :};
-BLOCK               ::= RBRACK PROGRAM:p LBRACK                         {: RESULT = p; :};
+BLOCK               ::= LBRACK PROGRAM:p RBRACK                         {: RESULT = p; :};
 
 EXPRESSION_LIST     ::=                                                 {:  RESULT = new ArrayList<Instruction>(); :}
                         | EXPRESSION_LIST:el VARIABLE_SET:va            {:  RESULT = el;RESULT.add(va); :}
@@ -52,12 +52,12 @@ OPERATION           ::= VALUE:v                                         {: RESUL
 CONDITIONAL        ::= IN_CASE_THAT CONDITION:c BLOCK:b                     {: RESULT = new InstructionConditional(c, b); :}
                    | IN_CASE_THAT CONDITION:c BLOCK:b FALLBACK BLOCK:b2     {: RESULT = new InstructionConditional(c,b,b2); :};
 
-CONDITION          ::= VALUE:l EQUALS VALUE:r                               {: RESULT = new InstructionBooleanCondition(l, Condition.EQUALS ,r); :}
+CONDITION          ::= VALUE:l EQUAL VALUE:r                               {: RESULT = new InstructionBooleanCondition(l, Condition.EQUAL ,r); :}
                      | VALUE:l LOWER VALUE:r                                {: RESULT = new InstructionBooleanCondition(l, Condition.LOWER ,r); :}
                      | VALUE:l GREATER VALUE:r                              {: RESULT = new InstructionBooleanCondition(l, Condition.GREATER, r); :}
-                     | VALUE:l LOWER_OR_EQUALS VALUE:r                      {: RESULT = new InstructionBooleanCondition(l, Condition.LOWER_OR_EQUALS, r); :}
-                     | VALUE:l GREATER_OR_EQUALS VALUE:r                    {: RESULT = new InstructionBooleanCondition(l, Condition.GREATER_OR_EQUALS, r); :}
-                     | VALUE:l NOT_EQUALS VALUE:r                           {: RESULT = new InstructionBooleanCondition(l, Condition.NOT_EQUALS, r); :};
+                     | VALUE:l LOWER_OR_EQUAL VALUE:r                      {: RESULT = new InstructionBooleanCondition(l, Condition.LOWER_OR_EQUAL, r); :}
+                     | VALUE:l GREATER_OR_EQUAL VALUE:r                    {: RESULT = new InstructionBooleanCondition(l, Condition.GREATER_OR_EQUAL, r); :}
+                     | VALUE:l NOT_EQUAL VALUE:r                           {: RESULT = new InstructionBooleanCondition(l, Condition.NOT_EQUAL, r); :};
 
 
 

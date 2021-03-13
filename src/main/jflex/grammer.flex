@@ -63,12 +63,12 @@ StringCharacter = [^\r\n\"\\]
 
   /* operators */
   //"="                            { return symbol(EQ); }
-  "equals"                       { return symbol(EQUALS); }
+  "equal"                       { return symbol(EQUAL); }
   "lower"                        { return symbol(LOWER); }
   "greater"                      { return symbol(GREATER); }
-  "lower or equal"               { return symbol(LOWER_OR_EQUALS); }
-  "greater or equal"             { return symbol(GREATER_OR_EQUALS); }
-  "not equal"                    { return symbol(NOT_EQUALS); }
+  "lower or equal"               { return symbol(LOWER_OR_EQUAL); }
+  "greater or equal"             { return symbol(GREATER_OR_EQUAL); }
+  "not equal"                    { return symbol(NOT_EQUAL); }
 
   "add"                          { return symbol(PLUS); }
   "substract"                    { return symbol(MINUS); }

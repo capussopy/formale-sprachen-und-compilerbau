@@ -56,17 +56,17 @@ public class Evaluator implements InstructionVisitor<Object> {
         BigDecimal left =  (BigDecimal) instructionBooleanCondition.getLeft().acceptVisitor(this);
         BigDecimal right = (BigDecimal) instructionBooleanCondition.getRight().acceptVisitor(this);
         switch (instructionBooleanCondition.getCondition()){
-            case EQUALS:
+            case EQUAL:
                 return left.compareTo(right) == 0;
             case LOWER:
                 return left.compareTo(right) < 0;
             case GREATER:
                 return left.compareTo(right) > 0;
-            case NOT_EQUALS:
+            case NOT_EQUAL:
                 return left.compareTo(right) != 0;
-            case GREATER_OR_EQUALS:
+            case GREATER_OR_EQUAL:
                 return left.compareTo(right) >= 0;
-            case LOWER_OR_EQUALS:
+            case LOWER_OR_EQUAL:
                 return left.compareTo(right) <= 0;
             default:
                 assert false;
@@ -86,8 +86,11 @@ public class Evaluator implements InstructionVisitor<Object> {
     @Override
     public Object visitProgram(InstructionProgram instructionProgram) {
         instructionProgram.getAssignments().forEach(instruction -> instruction.acceptVisitor(this));
-        final int lastInstruction = instructionProgram.getAssignments().size() - 1;
-        return instructionProgram.getAssignments().get(lastInstruction).acceptVisitor(this);
+        if(!instructionProgram.getAssignments().isEmpty()){
+            final int lastInstruction = instructionProgram.getAssignments().size() - 1;
+            return instructionProgram.getAssignments().get(lastInstruction).acceptVisitor(this);
+        }
+        return null;
     }
 
     @Override

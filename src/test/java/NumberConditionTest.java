@@ -8,12 +8,12 @@ public class NumberConditionTest extends ShellTest {
 
     @Test
     public void equalsTrue() throws Exception{
-        assertThat(parseExpression("10 equals 10")).isEqualTo(true);
+        assertThat(parseExpression("10 equal 10")).isEqualTo(true);
     }
 
     @Test
     public void equalsFalse() throws Exception {
-        assertThat(parseExpression("10 equals 3")).isEqualTo(false);
+        assertThat(parseExpression("10 equal 3")).isEqualTo(false);
     }
 
     @Test
