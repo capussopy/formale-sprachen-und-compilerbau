@@ -53,8 +53,8 @@ StringCharacter = [^\r\n\"\\]
   /* keywords */
   "set"                         {return symbol(SET);}
   "as"                          {return symbol(AS);}
-  "in case that"                {return symbol(IF);}
-  "fallback"                    {return symbol(ELSE);}
+  "in case that"                {return symbol(IN_CASE_THAT);}
+  "fallback"                    {return symbol(FALLBACK);}
   "as long as"                  {return symbol(WHILE);}
   "task"                        {return symbol(FUNCTION);}
   "takes"                       {return symbol(PARAMS);}
@@ -62,13 +62,13 @@ StringCharacter = [^\r\n\"\\]
   "with"                        {return symbol(FUNCTION_PARAMS);}
 
   /* operators */
-  "="                            { return symbol(EQ); }
-  "equal than"                   { return symbol(EQEQ); }
-  "lower than"                   { return symbol(LT); }
-  "greater than"                 { return symbol(GT); }
-  "lower or equal than"          { return symbol(LTEQ); }
-  "greater or equal than"        { return symbol(GTEQ); }
-  "not equal than"               { return symbol(NOTEQ); }
+  //"="                            { return symbol(EQ); }
+  "equals"                       { return symbol(EQUALS); }
+  "lower"                        { return symbol(LOWER); }
+  "greater"                      { return symbol(GREATER); }
+  "lower or equal"               { return symbol(LOWER_OR_EQUALS); }
+  "greater or equal"             { return symbol(GREATER_OR_EQUALS); }
+  "not equal"                    { return symbol(NOT_EQUALS); }
 
   "add"                          { return symbol(PLUS); }
   "substract"                    { return symbol(MINUS); }
@@ -76,10 +76,10 @@ StringCharacter = [^\r\n\"\\]
   "divide"                       { return symbol(DIVIDE); }
 
   /* separators */
-  "("                            { return symbol(LPAREN); }
-  ")"                            { return symbol(RPAREN); }
-//  "["                          { return symbol(LBRACK); }
-//  "]"                          { return symbol(RBRACK); }
+//  "("                            { return symbol(LPAREN); }
+//  ")"                            { return symbol(RPAREN); }
+  "["                          { return symbol(LBRACK); }
+  "]"                          { return symbol(RBRACK); }
   "."                            { return symbol(DOT); }
 
 

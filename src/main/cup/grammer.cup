@@ -9,32 +9,37 @@ import java.math.BigDecimal;
 terminal        BigDecimal              NUMBER;
 terminal        String                  NAME;
 terminal                                PLUS, MINUS, MULTIPLY, DIVIDE;
-terminal                                SET, AS, IF, ELSE, WHILE, FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
-terminal                                EQ, EQEQ, LT, GT, LTEQ, GTEQ, NOTEQ;
-terminal                                LPAREN, RPAREN, DOT, STRING_LITERAL;
+terminal                                SET, AS, IN_CASE_THAT, FALLBACK, WHILE, FUNCTION, PARAMS, FUNCTION_CALL, FUNCTION_PARAMS;
+terminal                                EQUALS, LOWER, GREATER, LOWER_OR_EQUALS, GREATER_OR_EQUALS, NOT_EQUALS;
+terminal                                LBRACK, RBRACK, DOT, STRING_LITERAL;
 
-non terminal    ArrayList<Instruction> ASSIGNMENT_LIST;
-non terminal    Instruction            PROGRAM;
+non terminal    ArrayList<Instruction> EXPRESSION_LIST;
+non terminal    Instruction            PROGRAM, BLOCK;
 non terminal    Instruction            VALUE;
-non terminal    Instruction            VARIABLE_ASSIGMENT;
+non terminal    Instruction            VARIABLE_SET;
 non terminal    Instruction            OPERATION;
+non terminal    Instruction            CONDITIONAL, CONDITION;
 
 
 
 start with PROGRAM;
 
 
-PROGRAM             ::= ASSIGNMENT_LIST:al                              {: RESULT = new InstructionProgram(al); :};
+PROGRAM             ::= EXPRESSION_LIST:el                              {: RESULT = new InstructionProgram(el); :};
+BLOCK               ::= RBRACK PROGRAM:p LBRACK                         {: RESULT = p; :};
 
-ASSIGNMENT_LIST     ::=                                                 {:  RESULT = new ArrayList<Instruction>(); :}
-                        | ASSIGNMENT_LIST:al VARIABLE_ASSIGMENT:va      {:  RESULT = al;RESULT.add(va); :}
-                        | ASSIGNMENT_LIST:al OPERATION:o                {:  RESULT = al;RESULT.add(o); :};
+EXPRESSION_LIST     ::=                                                 {:  RESULT = new ArrayList<Instruction>(); :}
+                        | EXPRESSION_LIST:el VARIABLE_SET:va            {:  RESULT = el;RESULT.add(va); :}
+                        | EXPRESSION_LIST:el OPERATION:o                {:  RESULT = el;RESULT.add(o); :}
+                        | EXPRESSION_LIST:el CONDITION:c                {:  RESULT = el; RESULT.add(c); :}
+                        | EXPRESSION_LIST:el CONDITIONAL:c              {:  RESULT = el;RESULT.add(c); :};
+
 
 VALUE               ::= NUMBER:n                                        {: RESULT = new InstructionNumber(n); :}
                         | NAME:n                                        {: RESULT = new InstructionVariableGet(n); :} ;
 
 
-VARIABLE_ASSIGMENT  ::= SET VALUE:v AS NAME:n                           {: RESULT = new InstructionVariableSet(n, v); :};
+VARIABLE_SET        ::= SET VALUE:v AS NAME:n                           {: RESULT = new InstructionVariableSet(n, v); :};
 
 OPERATION           ::= VALUE:v                                         {: RESULT = v; :}
                     | VALUE:l PLUS VALUE:r                              {: RESULT = new InstructionNumberOperation(BinaryOperator.PLUS, l, r); :}
@@ -43,6 +48,16 @@ OPERATION           ::= VALUE:v                                         {: RESUL
                     | VALUE:l DIVIDE VALUE:r                            {: RESULT = new InstructionNumberOperation(BinaryOperator.DIVIDE, l, r); :};
 
 
+
+CONDITIONAL        ::= IN_CASE_THAT CONDITION:c BLOCK:b                     {: RESULT = new InstructionConditional(c, b); :}
+                   | IN_CASE_THAT CONDITION:c BLOCK:b FALLBACK BLOCK:b2     {: RESULT = new InstructionConditional(c,b,b2); :};
+
+CONDITION          ::= VALUE:l EQUALS VALUE:r                               {: RESULT = new InstructionBooleanCondition(l, Condition.EQUALS ,r); :}
+                     | VALUE:l LOWER VALUE:r                                {: RESULT = new InstructionBooleanCondition(l, Condition.LOWER ,r); :}
+                     | VALUE:l GREATER VALUE:r                              {: RESULT = new InstructionBooleanCondition(l, Condition.GREATER, r); :}
+                     | VALUE:l LOWER_OR_EQUALS VALUE:r                      {: RESULT = new InstructionBooleanCondition(l, Condition.LOWER_OR_EQUALS, r); :}
+                     | VALUE:l GREATER_OR_EQUALS VALUE:r                    {: RESULT = new InstructionBooleanCondition(l, Condition.GREATER_OR_EQUALS, r); :}
+                     | VALUE:l NOT_EQUALS VALUE:r                           {: RESULT = new InstructionBooleanCondition(l, Condition.NOT_EQUALS, r); :};
 
 
 

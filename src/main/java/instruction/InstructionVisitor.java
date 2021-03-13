@@ -10,4 +10,8 @@ public interface InstructionVisitor<T> {
     T visitBinaryOperation(InstructionNumberOperation instructionNumberOperation);
 
     T visitVariableGet(InstructionVariableGet instructionVariableGet);
+
+    T visitBooleanCondition(InstructionBooleanCondition instructionBooleanCondition);
+
+    T visitConditional(InstructionConditional instructionConditional);
 }

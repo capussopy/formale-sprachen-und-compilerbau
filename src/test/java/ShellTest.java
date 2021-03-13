@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ShellTest {
 
-    private Map<String, BigDecimal> context;
+    private Map<String, Object> context;
 
     @Before
     public void init(){

@@ -5,10 +5,10 @@ import java.math.MathContext;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Evaluator implements InstructionVisitor<BigDecimal> {
-    private final Map<String, BigDecimal> context;
+public class Evaluator implements InstructionVisitor<Object> {
+    private final Map<String, Object> context;
 
-    public Evaluator(Map<String, BigDecimal> context) {
+    public Evaluator(Map<String, Object> context) {
         this.context = context;
     }
 
@@ -19,15 +19,15 @@ public class Evaluator implements InstructionVisitor<BigDecimal> {
 
     @Override
     public BigDecimal visitVariableSet(InstructionVariableSet instructionVariableSet) {
-        BigDecimal value = instructionVariableSet.getValue().acceptVisitor(this);
+        BigDecimal value = (BigDecimal) instructionVariableSet.getValue().acceptVisitor(this);
         context.put(instructionVariableSet.getName(), value);
         return value;
     }
 
     @Override
     public BigDecimal visitBinaryOperation(InstructionNumberOperation instructionNumberOperation) {
-        BigDecimal left = instructionNumberOperation.getLeftOperand().acceptVisitor(this);
-        BigDecimal right = instructionNumberOperation.getRightOperand().acceptVisitor(this);
+        BigDecimal left =  (BigDecimal) instructionNumberOperation.getLeftOperand().acceptVisitor(this);
+        BigDecimal right = (BigDecimal) instructionNumberOperation.getRightOperand().acceptVisitor(this);
         switch (instructionNumberOperation.getOperator()) {
             case PLUS:
                 return left.add(right);
@@ -48,11 +48,43 @@ public class Evaluator implements InstructionVisitor<BigDecimal> {
         context.computeIfAbsent(instructionVariableGet.getName(), s -> {
             throw new RuntimeException();
         });
-        return context.get(instructionVariableGet.getName());
+        return (BigDecimal) context.get(instructionVariableGet.getName());
     }
 
     @Override
-    public BigDecimal visitProgram(InstructionProgram instructionProgram) {
+    public Boolean visitBooleanCondition(InstructionBooleanCondition instructionBooleanCondition) {
+        BigDecimal left =  (BigDecimal) instructionBooleanCondition.getLeft().acceptVisitor(this);
+        BigDecimal right = (BigDecimal) instructionBooleanCondition.getRight().acceptVisitor(this);
+        switch (instructionBooleanCondition.getCondition()){
+            case EQUALS:
+                return left.compareTo(right) == 0;
+            case LOWER:
+                return left.compareTo(right) < 0;
+            case GREATER:
+                return left.compareTo(right) > 0;
+            case NOT_EQUALS:
+                return left.compareTo(right) != 0;
+            case GREATER_OR_EQUALS:
+                return left.compareTo(right) >= 0;
+            case LOWER_OR_EQUALS:
+                return left.compareTo(right) <= 0;
+            default:
+                assert false;
+                return null;
+        }
+    }
+
+    @Override
+    public Object visitConditional(InstructionConditional instructionConditional) {
+       Boolean condition = (Boolean) instructionConditional.getCondition().acceptVisitor(this);
+       if(condition){
+           return instructionConditional.getTrueBlock().acceptVisitor(this);
+       }
+       return instructionConditional.getFalseBlock().acceptVisitor(this);
+    }
+
+    @Override
+    public Object visitProgram(InstructionProgram instructionProgram) {
         instructionProgram.getAssignments().forEach(instruction -> instruction.acceptVisitor(this));
         final int lastInstruction = instructionProgram.getAssignments().size() - 1;
         return instructionProgram.getAssignments().get(lastInstruction).acceptVisitor(this);
