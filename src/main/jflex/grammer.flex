@@ -76,8 +76,6 @@ StringCharacter = [^\r\n\"\\]
   "divide"                       { return symbol(DIVIDE); }
 
   /* separators */
-//  "("                            { return symbol(LPAREN); }
-//  ")"                            { return symbol(RPAREN); }
   "["                          { return symbol(LBRACK); }
   "]"                          { return symbol(RBRACK); }
   ","                            { return symbol(COMMA); }
