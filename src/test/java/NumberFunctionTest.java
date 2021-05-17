@@ -32,9 +32,8 @@ public class NumberFunctionTest extends ShellTest {
 
     @Test(expected = ContextException.class)
     public void executeUndefinedFunction() throws Exception {
-      parseExpression("execute calculate with 10,20");
+        parseExpression("execute calculate with 10,20");
     }
-
 
 
     @Test
@@ -51,7 +50,7 @@ public class NumberFunctionTest extends ShellTest {
     public void executeFunctionWithToManyParams() throws Exception {
         String expr = "task calculate takes amount, quantity [ amount multiply quantity ]" +
                 "execute calculate with 10,20,30";
-       parseExpression(expr);
+        parseExpression(expr);
     }
 
     @Test(expected = FunctionException.class)
@@ -62,5 +61,12 @@ public class NumberFunctionTest extends ShellTest {
     }
 
 
+    @Test
+    public void executeFunctionWithVariableInput() throws Exception {
+        String expr = "set 2 as foo " +
+                "task Square takes x [ x multiply x ]" +
+                "execute Square with foo";
+        assertThat(parseExpression(expr)).isEqualTo(new BigDecimal("4"));
+    }
 
 }
