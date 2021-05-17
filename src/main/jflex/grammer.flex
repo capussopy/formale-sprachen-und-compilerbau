@@ -62,7 +62,6 @@ StringCharacter = [^\r\n\"\\]
   "with"                        {return symbol(WITH);}
 
   /* operators */
-  //"="                            { return symbol(EQ); }
   "equal"                       { return symbol(EQUAL); }
   "lower"                        { return symbol(LOWER); }
   "greater"                      { return symbol(GREATER); }
@@ -100,7 +99,6 @@ StringCharacter = [^\r\n\"\\]
 }
 
 <STRING> {
-  //\"                             { yybegin(YYINITIAL); return symbol(STRING_LITERAL, string.toString()); }
   {StringCharacter}+             { string.append( yytext() ); }
   
   /* escape sequences */
