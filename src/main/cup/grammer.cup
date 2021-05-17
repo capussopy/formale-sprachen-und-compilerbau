@@ -36,32 +36,32 @@ precedence left VALUE, NUMBER;
 start with PROGRAM;
 
 
-PROGRAM             ::= EXPRESSION_LIST:el                              {: RESULT = new InstructionProgram(el); :};
-BLOCK               ::= LBRACK PROGRAM:p RBRACK                         {: RESULT = p; :};
+PROGRAM             ::= EXPRESSION_LIST:el                                  {: RESULT = new InstructionProgram(el); :};
+BLOCK               ::= LBRACK PROGRAM:p RBRACK                             {: RESULT = p; :};
 
-EXPRESSION_LIST     ::=                                                 {:  RESULT = new ArrayList<Instruction>(); :}
-                        | EXPRESSION_LIST:el VARIABLE_SET:va            {:  RESULT = el; RESULT.add(va); :}
-                        | EXPRESSION_LIST:el VALUE:v                    {:  RESULT = el; RESULT.add(v); :}
-                        | EXPRESSION_LIST:el CONDITION:c                {:  RESULT = el; RESULT.add(c); :}
-                        | EXPRESSION_LIST:el CONDITIONAL:c              {:  RESULT = el; RESULT.add(c); :}
-                        | EXPRESSION_LIST:el LOOP:l                     {:  RESULT = el; RESULT.add(l); :}
-                        | EXPRESSION_LIST:el FUNCTION:f                 {:  RESULT = el; RESULT.add(f); :}
-                        | EXPRESSION_LIST:el FUNCTION_CALL:fl           {:  RESULT = el; RESULT.add(fl); :};
-
-
-
-VALUE               ::= NUMBER:n                                        {: RESULT = new InstructionNumber(n); :}
-                        | NAME:n                                        {: RESULT = new InstructionVariableGet(n); :}
-                        | OPERATION:o                                   {: RESULT = o; :};
-
-OPERATION           ::= VALUE:l PLUS VALUE:r                          {: RESULT = new InstructionNumberOperation(BinaryOperator.PLUS, l, r); :}
-                        | VALUE:l MINUS VALUE:r                         {: RESULT = new InstructionNumberOperation(BinaryOperator.MINUS, l, r); :}
-                        | VALUE:l MULTIPLY VALUE:r                      {: RESULT = new InstructionNumberOperation(BinaryOperator.MULTIPLY, l, r); :}
-                        | VALUE:l DIVIDE VALUE:r                        {: RESULT = new InstructionNumberOperation(BinaryOperator.DIVIDE, l, r); :};
+EXPRESSION_LIST     ::=                                                     {:  RESULT = new ArrayList<Instruction>(); :}
+                        | EXPRESSION_LIST:el VARIABLE_SET:va                {:  RESULT = el; RESULT.add(va); :}
+                        | EXPRESSION_LIST:el VALUE:v                        {:  RESULT = el; RESULT.add(v); :}
+                        | EXPRESSION_LIST:el CONDITION:c                    {:  RESULT = el; RESULT.add(c); :}
+                        | EXPRESSION_LIST:el CONDITIONAL:c                  {:  RESULT = el; RESULT.add(c); :}
+                        | EXPRESSION_LIST:el LOOP:l                         {:  RESULT = el; RESULT.add(l); :}
+                        | EXPRESSION_LIST:el FUNCTION:f                     {:  RESULT = el; RESULT.add(f); :}
+                        | EXPRESSION_LIST:el FUNCTION_CALL:fl               {:  RESULT = el; RESULT.add(fl); :};
 
 
 
-VARIABLE_SET        ::= SET VALUE:v AS NAME:n                           {: RESULT = new InstructionVariableSet(n, v); :};
+VALUE               ::= NUMBER:n                                            {: RESULT = new InstructionNumber(n); :}
+                        | NAME:n                                            {: RESULT = new InstructionVariableGet(n); :}
+                        | OPERATION:o                                       {: RESULT = o; :};
+
+OPERATION           ::= VALUE:l PLUS VALUE:r                                {: RESULT = new InstructionNumberOperation(BinaryOperator.PLUS, l, r); :}
+                        | VALUE:l MINUS VALUE:r                             {: RESULT = new InstructionNumberOperation(BinaryOperator.MINUS, l, r); :}
+                        | VALUE:l MULTIPLY VALUE:r                          {: RESULT = new InstructionNumberOperation(BinaryOperator.MULTIPLY, l, r); :}
+                        | VALUE:l DIVIDE VALUE:r                            {: RESULT = new InstructionNumberOperation(BinaryOperator.DIVIDE, l, r); :};
+
+
+
+VARIABLE_SET        ::= SET VALUE:v AS NAME:n                               {: RESULT = new InstructionVariableSet(n, v); :};
 
 
 
