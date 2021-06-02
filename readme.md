@@ -24,13 +24,13 @@
 
     task hugo takes max(
     set 1 as count
-    until count lower or equal than max(
-    in case that count modulo 7 equal to 0(
+    as long as count lower or equal  max[
+    in case that count modulo 7 equal to 0[
                                             ...
-                                            )
-    fallback(
+                                            ]
+    fallback[
             ...
-            )
-        )
-      )
-    )
+            ]
+        ]
+      ]
+    ]
