@@ -13,7 +13,7 @@ public class NumberLoopTest extends ShellTest {
                 "set amount add 0.1 as amount " +
                 "set result add 5 as result"+
                 "]"+
-                "result";
+                "set result as finalResult";
 
         assertThat(parseExpression(exp)).isEqualTo(new BigDecimal("100"));
     }
@@ -26,7 +26,7 @@ public class NumberLoopTest extends ShellTest {
                 "set amount add 0.1 as amount " +
                 "set result add 5 as result"+
                 "]"+
-                "result";
+                "set result as finalResult";
 
         assertThat(parseExpression(exp)).isEqualTo(new BigDecimal("0"));
     }

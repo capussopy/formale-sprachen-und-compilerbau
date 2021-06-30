@@ -18,20 +18,20 @@ public class VariableAssigmentTest extends ShellTest {
 
     @Test(expected = ContextException.class)
     public void getInvalidVariable() throws Exception {
-        parseExpression("amount");
+        parseExpression("set amount as newAmount");
     }
 
     @Test
     public void getVariable() throws Exception {
         addToContext("amount", new BigDecimal("11.1"));
-        assertThat(parseExpression("amount")).isEqualTo(new BigDecimal("11.1"));
+        assertThat(parseExpression("set amount as newAmount")).isEqualTo(new BigDecimal("11.1"));
     }
 
     @Test
     public void getVariableWithMultipleAssignments() throws Exception {
         addToContext("amount", new BigDecimal("11.1"));
         addToContext("amount2", new BigDecimal("-10"));
-        assertThat(parseExpression("amount")).isEqualTo(new BigDecimal("11.1"));
+        assertThat(parseExpression("set amount as newAmount")).isEqualTo(new BigDecimal("11.1"));
     }
 
 

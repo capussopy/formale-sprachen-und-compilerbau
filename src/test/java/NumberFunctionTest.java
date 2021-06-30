@@ -12,7 +12,7 @@ public class NumberFunctionTest extends ShellTest {
 
     @Test
     public void defineFunction() throws Exception {
-        assertThat(parseExpression("task calculate takes amount, quantity [ amount multiply quantity ]")).isInstanceOf(VoidObject.class);
+        assertThat(parseExpression("task calculate takes amount, quantity [ set amount multiply quantity as result ]")).isInstanceOf(VoidObject.class);
     }
 
     @Test(expected = RuntimeException.class)
@@ -24,7 +24,7 @@ public class NumberFunctionTest extends ShellTest {
     @Test
     public void executeFunction() throws Exception {
         String expr = "task calculate takes amount, quantity [ " +
-                "amount multiply quantity " +
+                "set amount multiply quantity as result" +
                 "]" +
                 "execute calculate with 10,20";
         assertThat(parseExpression(expr)).isEqualTo(new BigDecimal("200"));
@@ -40,7 +40,7 @@ public class NumberFunctionTest extends ShellTest {
     public void executeFunctionWithVariables() throws Exception {
         addToContext("value1", new BigDecimal("5"));
         addToContext("value2", new BigDecimal("10"));
-        String expr = "task calculate takes amount, quantity [ amount multiply quantity ]" +
+        String expr = "task calculate takes amount, quantity [ set amount multiply quantity as result ]" +
                 "execute calculate with value1,value2";
         assertThat(parseExpression(expr)).isEqualTo(new BigDecimal("50"));
     }
@@ -48,14 +48,14 @@ public class NumberFunctionTest extends ShellTest {
 
     @Test(expected = FunctionException.class)
     public void executeFunctionWithToManyParams() throws Exception {
-        String expr = "task calculate takes amount, quantity [ amount multiply quantity ]" +
+        String expr = "task calculate takes amount, quantity [ set amount multiply quantity as result ]" +
                 "execute calculate with 10,20,30";
         parseExpression(expr);
     }
 
     @Test(expected = FunctionException.class)
     public void executeFunctionWithFewParams() throws Exception {
-        String expr = "task calculate takes amount, quantity [ amount multiply quantity ]" +
+        String expr = "task calculate takes amount, quantity [ set amount multiply quantity as result ]" +
                 "execute calculate with 10";
         parseExpression(expr);
     }
@@ -64,7 +64,7 @@ public class NumberFunctionTest extends ShellTest {
     @Test
     public void executeFunctionWithVariableInput() throws Exception {
         String expr = "set 2 as foo " +
-                "task Square takes x [ x multiply x ]" +
+                "task Square takes x [ set x multiply x as result ]" +
                 "execute Square with foo";
         assertThat(parseExpression(expr)).isEqualTo(new BigDecimal("4"));
     }
