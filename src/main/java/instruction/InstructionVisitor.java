@@ -22,4 +22,6 @@ public interface InstructionVisitor<T> {
     T visitFunctionDefinition(InstructionFunctionDefinition instructionFunctionDefinition);
 
     T visitFunctionCall(InstructionFunctionCall instructionFunctionCall);
+
+    T visitLogicalCondition(InstructionLogicalCondition instructionLogicalCondition);
 }

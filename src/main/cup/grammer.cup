@@ -9,6 +9,7 @@ terminal        BigDecimal              NUMBER;
 terminal        String                  NAME;
 terminal                                PLUS, MINUS, MULTIPLY, DIVIDE;
 terminal                                EQUAL, LOWER, GREATER, LOWER_OR_EQUAL, GREATER_OR_EQUAL, NOT_EQUAL;
+terminal                                AND, OR, NOT, NOT_OR, NOT_AND;
 terminal                                LBRACK, RBRACK;
 terminal                                SET, AS;
 terminal                                IN_CASE_THAT, FALLBACK;
@@ -24,6 +25,7 @@ non terminal    Instruction            VALUE;
 non terminal    Instruction            VARIABLE_SET;
 non terminal    Instruction            OPERATION;
 non terminal    Instruction            CONDITIONAL, CONDITION;
+non terminal    Instruction            LOGICAL;
 non terminal    Instruction            LOOP;
 non terminal    Instruction            FUNCTION, FUNCTION_CALL;
 
@@ -63,7 +65,9 @@ VARIABLE_SET        ::= SET VALUE:v AS NAME:n                               {: R
 
 
 CONDITIONAL        ::= IN_CASE_THAT CONDITION:c BLOCK:b                     {: RESULT = new InstructionConditional(c, b); :}
-                   | IN_CASE_THAT CONDITION:c BLOCK:b FALLBACK BLOCK:b2     {: RESULT = new InstructionConditional(c,b,b2); :};
+                   | IN_CASE_THAT CONDITION:c BLOCK:b FALLBACK BLOCK:b2     {: RESULT = new InstructionConditional(c,b,b2); :}
+                   | IN_CASE_THAT LOGICAL:l BLOCK: b                        {: RESULT = new InstructionConditional(l,b); :}
+                   | IN_CASE_THAT LOGICAL:l BLOCK:b FALLBACK BLOCK:b2       {:RESULT = new InstructionConditional(l,b,b2); :};
 
 CONDITION          ::= VALUE:l EQUAL VALUE:r                                {: RESULT = new InstructionBooleanCondition(l, Condition.EQUAL ,r); :}
                      | VALUE:l LOWER VALUE:r                                {: RESULT = new InstructionBooleanCondition(l, Condition.LOWER ,r); :}
@@ -71,6 +75,12 @@ CONDITION          ::= VALUE:l EQUAL VALUE:r                                {: R
                      | VALUE:l LOWER_OR_EQUAL VALUE:r                       {: RESULT = new InstructionBooleanCondition(l, Condition.LOWER_OR_EQUAL, r); :}
                      | VALUE:l GREATER_OR_EQUAL VALUE:r                     {: RESULT = new InstructionBooleanCondition(l, Condition.GREATER_OR_EQUAL, r); :}
                      | VALUE:l NOT_EQUAL VALUE:r                            {: RESULT = new InstructionBooleanCondition(l, Condition.NOT_EQUAL, r); :};
+
+LOGICAL             ::= CONDITION:c AND CONDITION:c2                        {: RESULT = new InstructionLogicalCondition(c, Logical.AND, c2); :}
+                      | CONDITION:c OR CONDITION:c2                         {: RESULT = new InstructionLogicalCondition(c, Logical.OR, c2); :}
+                      | NOT CONDITION:c                                     {: RESULT = new InstructionLogicalCondition(c, Logical.NOT, null); :}
+                      | CONDITION:c NOT_OR CONDITION:c2                     {: RESULT = new InstructionLogicalCondition(c, Logical.NOT_OR, c2);:}
+                      | CONDITION:c NOT_AND CONDITION:c2                    {: RESULT = new InstructionLogicalCondition(c, Logical.NOT_AND, c2);:};
 
 
 LOOP              ::= AS_LONG_AS CONDITION:c BLOCK:b                        {: RESULT = new InstructionLoop(c, b); :};

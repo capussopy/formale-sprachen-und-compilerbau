@@ -3,6 +3,8 @@ import core.VoidObject;
 import core.exception.BinaryOperationException;
 import core.exception.BooleanConditionException;
 import core.exception.FunctionException;
+import core.exception.LogicalException;
+import enumeration.Logical;
 import instruction.*;
 
 import java.math.BigDecimal;
@@ -120,6 +122,27 @@ public class Evaluator extends ContextStore implements InstructionVisitor<Object
         destroyContext();
 
         return value;
+    }
+
+    @Override
+    public Boolean visitLogicalCondition(InstructionLogicalCondition instructionLogicalCondition) {
+        Boolean firstCondition = (Boolean) instructionLogicalCondition.getCondition().acceptVisitor(this);
+        if (instructionLogicalCondition.getLogical().equals(Logical.NOT)) {
+            return !firstCondition;
+        }
+        Boolean otherCondition = (Boolean) instructionLogicalCondition.getOtherCondition().acceptVisitor(this);
+        switch (instructionLogicalCondition.getLogical()) {
+            case AND:
+                return firstCondition && otherCondition;
+            case OR:
+                return firstCondition || otherCondition;
+            case NOT_OR:
+                return !(firstCondition || otherCondition);
+            case NOT_AND:
+                return  !(firstCondition && otherCondition);
+            default:
+                throw new LogicalException("Logical not found");
+        }
     }
 
     @Override

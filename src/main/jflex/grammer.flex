@@ -69,6 +69,14 @@ StringCharacter = [^\r\n\"\\]
   "greater or equal"             { return symbol(GREATER_OR_EQUAL); }
   "not equal"                    { return symbol(NOT_EQUAL); }
 
+  /* logicals */
+  "and"                         {return symbol(AND);}
+  "or"                          {return symbol(OR);}
+  "not"                         {return symbol(NOT);}
+  "not or"                      {return symbol(NOT_OR);}
+  "not and"                     {return symbol(NOT_AND);}
+
+
   "add"                          { return symbol(PLUS); }
   "substract"                    { return symbol(MINUS); }
   "multiply"                     { return symbol(MULTIPLY); }
