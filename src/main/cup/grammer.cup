@@ -42,7 +42,6 @@ BLOCK               ::= LBRACK PROGRAM:p RBRACK                             {: R
 EXPRESSION_LIST     ::=                                                     {:  RESULT = new ArrayList<Instruction>(); :}
                         | EXPRESSION_LIST:el VARIABLE_SET:va                {:  RESULT = el; RESULT.add(va); :}
                         | EXPRESSION_LIST:el VALUE:v                        {:  RESULT = el; RESULT.add(v); :}
-                        | EXPRESSION_LIST:el CONDITION:c                    {:  RESULT = el; RESULT.add(c); :}
                         | EXPRESSION_LIST:el CONDITIONAL:c                  {:  RESULT = el; RESULT.add(c); :}
                         | EXPRESSION_LIST:el LOOP:l                         {:  RESULT = el; RESULT.add(l); :}
                         | EXPRESSION_LIST:el FUNCTION:f                     {:  RESULT = el; RESULT.add(f); :}
