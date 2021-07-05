@@ -12,6 +12,8 @@ import java.math.MathContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Evaluator extends ContextStore implements InstructionVisitor<Object> {
 
@@ -139,10 +141,23 @@ public class Evaluator extends ContextStore implements InstructionVisitor<Object
             case NOT_OR:
                 return !(firstCondition || otherCondition);
             case NOT_AND:
-                return  !(firstCondition && otherCondition);
+                return !(firstCondition && otherCondition);
             default:
                 throw new LogicalException("Logical not found");
         }
+    }
+
+    @Override
+    public String visitConsoleOutput(InstructionConsoleOutput instructionConsoleOutput) {
+        String output = instructionConsoleOutput.getOutput().substring(1, instructionConsoleOutput.getOutput().length() - 1);
+        final Matcher matcher = Pattern.compile("\\$.[^\\s]+").matcher(output);
+        while (matcher.find()) {
+            String variable = matcher.group().replace("$", "");
+            output = output.replace(matcher.group(), getVariable(variable).toString());
+        }
+        System.out.println(output);
+        return output;
+
     }
 
     @Override

@@ -6,10 +6,9 @@ FFHS - FAC BE-Sa-1
 
 Jan Capasso
 
-Einige Beispiele sind zu finden unter [Beispiele.pdf](./Beispiele.pdf)
 
 ---
-##Inhalt
+#Inhalt
 Exquisite ist eine einfache Skript-Sprache, bei der darauf geachtet wurde, dass die Befehle möglichst lesbar sind.
 Das Projekt umfasst einen Scanner (jFlex) sowie einen Parser (CUP). In der Abgabe sind nur 
 folgende Kern-Funktionen umgesetzt worden:
@@ -18,15 +17,21 @@ folgende Kern-Funktionen umgesetzt worden:
 - Bedingte If-Else Anweisungen
 - Definieren und Aufrufen von Funktionen
 - Ausführen von while-Schlaufen
+- Konsolen ausgaben mit einsetzen von Variablen
 
-##Installation
+---
+
+#Installation
 Das Projekt wurde mit maven erstellt. Im Import von modernen IDE's sollten die Bibliotheken automatisch hinzugefügt werden.
 
 ---
 
-##Aufbau Projekt
+#Aufbau Projekt
 Scanner File [Scanner](./src/main/jflex/grammer.flex)
+
 Parser File [Parser](./src/main/cup/grammer.cup)
+
+Die [Shell](./src/main/java/Shell.java) ist eine Java Klasse, welche eine direkt ausführbare Möglichkeit für die Skript-Sprache bietet.
 
 Das Hauptprojekt befindet sich unter  [Projekt](./src/main/java) und ist unterteilt in:
 - Im [core](./src/main/java/core) finden sich Sprachen-Spezifische Exceptions und ein VoidObjekt, dass bei keiner Rückgabe 
@@ -38,7 +43,8 @@ anstatt ``null`` zurückgegeben wird.
 [Tests](./src/test)
 
 ---
-# Beispiel in Java
+# Vergleich Java zu Exquisite
+##Java
     static void main(List<String> args) {
         int max = 100;
         hugo(max);
@@ -55,7 +61,7 @@ anstatt ``null`` zurückgegeben wird.
         }
     }
 
-# Beispiel in Excuisite
+##Excuisite
 
     set 100 as max
     execute hugo with max
@@ -72,3 +78,52 @@ anstatt ``null`` zurückgegeben wird.
         ]
       ]
     ]
+---
+#Beispiele
+#Vergleich Operatoren
+    x equal y
+    x not equal y
+    x lower y
+    x greater y
+    x lower or equal y
+    x not equal y
+##Mathematische Operatoren
+    x add y
+    x substract y
+    x multiply y
+    x divide y
+##Logische Operatoren
+    x equal y and a equal b
+    x equal y or a equal b
+    x equal y not and a equal b x equl y not or a equal b not x equal y
+##Zuweisen von Variablen
+    set 1 as var 
+
+    set 1 add 2 as var
+
+    set 1 add var as otherVar
+
+##Bedingungen
+Die Rückgabe der Funktionen ist jeweils die letzte Ausführung.
+###If Block
+    in case that x equal y [ set 1 as var ]
+###If-else Block
+    in case that x equal y [set 1 as var] fallback [ set 2 as var ]
+
+##Funktion definieren
+    task square takes x,y [ set x add y as result ]
+###Funktion definieren und ausführen
+    set 2 as var
+    task square takes x [ set x multiply x as result ] execute square with var;
+##Schlaufen
+    as long as amount equal 2 [
+        set amount add 0.1 as amount
+        set result add 5 as result
+        ]
+
+##Ausgabe in Konsole
+    print('Hello World')
+
+###Ausgabe in Konsole mit Variablen
+    set 2 as value
+    print('Value $value')

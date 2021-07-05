@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 
 %{
   StringBuilder string = new StringBuilder();
-  
+
   private Symbol symbol(int type) {
     return new JavaSymbol(type, yyline+1, yycolumn+1);
   }
@@ -85,30 +85,32 @@ StringCharacter = [^\r\n\"\\]
   /* separators */
   "["                          { return symbol(LBRACK); }
   "]"                          { return symbol(RBRACK); }
-  ","                            { return symbol(COMMA); }
+  ","                          { return symbol(COMMA); }
 
-
-  /* string literal */
-  \"                             { yybegin(STRING); string.setLength(0); }
+  /* output to console */
+  "print"                       { return symbol(PRINT); }
+  "("                           { return symbol(LPAREN); }
+  ")"                           { return symbol(RPAREN); }
+  '.*'                        { return symbol(OUTPUT, new String(yytext()));}
 
 
   /* numeric literals */
   {Number}                { return symbol(NUMBER, new BigDecimal(yytext())); }
   {Number}[dD]            { return symbol(NUMBER, new BigDecimal(yytext().substring(0,yylength()-1))); }
-  
+
 
 
   /* whitespace */
   {WhiteSpace}                   { /* ignore */ }
 
 
-  /* identifiers */ 
+  /* identifiers */
   {Name}                         { return symbol(NAME, yytext()); }
 }
 
 <STRING> {
   {StringCharacter}+             { string.append( yytext() ); }
-  
+
   /* escape sequences */
   "\\b"                          { string.append( '\b' ); }
   "\\t"                          { string.append( '\t' ); }
@@ -119,7 +121,7 @@ StringCharacter = [^\r\n\"\\]
   "\\'"                          { string.append( '\'' ); }
   "\\\\"                         { string.append( '\\' ); }
 
-  
+
   /* error cases */
   \\.                            { throw new RuntimeException("Illegal escape sequence \""+yytext()+"\""); }
   {LineTerminator}               { throw new RuntimeException("Unterminated string at end of line"); }

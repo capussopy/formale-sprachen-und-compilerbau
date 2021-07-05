@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 terminal        BigDecimal              NUMBER;
 terminal        String                  NAME;
+terminal        String                  OUTPUT;
 terminal                                PLUS, MINUS, MULTIPLY, DIVIDE;
 terminal                                EQUAL, LOWER, GREATER, LOWER_OR_EQUAL, GREATER_OR_EQUAL, NOT_EQUAL;
 terminal                                AND, OR, NOT, NOT_OR, NOT_AND;
@@ -16,6 +17,7 @@ terminal                                IN_CASE_THAT, FALLBACK;
 terminal                                AS_LONG_AS;
 terminal                                TASK, TAKES, COMMA;
 terminal                                EXECUTE, WITH;
+terminal                                PRINT, LPAREN, RPAREN;
 
 
 non terminal    ArrayList<Instruction> EXPRESSION_LIST, VALUE_LIST;
@@ -28,6 +30,7 @@ non terminal    Instruction            CONDITIONAL, CONDITION;
 non terminal    Instruction            LOGICAL;
 non terminal    Instruction            LOOP;
 non terminal    Instruction            FUNCTION, FUNCTION_CALL;
+non terminal    Instruction            CONSOLE_OUTPUT;
 
 
 precedence left PLUS, MINUS;
@@ -45,7 +48,9 @@ EXPRESSION_LIST     ::=                                                     {:  
                         | EXPRESSION_LIST:el CONDITIONAL:c                  {:  RESULT = el; RESULT.add(c); :}
                         | EXPRESSION_LIST:el LOOP:l                         {:  RESULT = el; RESULT.add(l); :}
                         | EXPRESSION_LIST:el FUNCTION:f                     {:  RESULT = el; RESULT.add(f); :}
-                        | EXPRESSION_LIST:el FUNCTION_CALL:fl               {:  RESULT = el; RESULT.add(fl); :};
+                        | EXPRESSION_LIST:el FUNCTION_CALL:fl               {:  RESULT = el; RESULT.add(fl); :}
+                        | EXPRESSION_LIST:el CONSOLE_OUTPUT:co              {:  RESULT = el; RESULT.add(co); :};
+
 
 
 
@@ -100,4 +105,6 @@ VALUE_LIST        ::=                                                       {: R
 
 FUNCTION_CALL   ::= EXECUTE NAME:n WITH VALUE_LIST:vl                       {: RESULT = new InstructionFunctionCall(n, vl); :};
 
+
+CONSOLE_OUTPUT   ::= PRINT LPAREN OUTPUT:c RPAREN                          {: RESULT = new InstructionConsoleOutput(c); :};
 
