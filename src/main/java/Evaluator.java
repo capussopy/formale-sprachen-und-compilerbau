@@ -150,7 +150,7 @@ public class Evaluator extends ContextStore implements InstructionVisitor<Object
     @Override
     public String visitConsoleOutput(InstructionConsoleOutput instructionConsoleOutput) {
         String output = instructionConsoleOutput.getOutput().substring(1, instructionConsoleOutput.getOutput().length() - 1);
-        final Matcher matcher = Pattern.compile("\\$.[^\\s]+").matcher(output);
+        final Matcher matcher = Pattern.compile("\\$[a-zA-z]+").matcher(output);
         while (matcher.find()) {
             String variable = matcher.group().replace("$", "");
             output = output.replace(matcher.group(), getVariable(variable).toString());
